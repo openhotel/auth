@@ -8,13 +8,13 @@ import {
   SESSION_EXPIRE_TIME,
 } from "shared/consts/main.ts";
 
-export const loginRequest: RequestType = {
+export const refreshSessionRequest: RequestType = {
   method: RequestMethod.POST,
-  pathname: "/login",
+  pathname: "/refresh-session",
   func: async (request, url) => {
-    const { username, password, captchaId } = await request.json();
+    let { sessionId, refreshToken } = await request.json();
 
-    if (!(await System.captcha.verify(captchaId)) || !username || !password)
+    if (!sessionId || !refreshToken)
       return Response.json(
         { status: 403 },
         {
@@ -22,9 +22,12 @@ export const loginRequest: RequestType = {
         },
       );
 
-    const { value: account } = await System.db.get(["accounts", username]);
+    const { value: refreshSession } = await System.db.get([
+      "refresh-session",
+      sessionId,
+    ]);
 
-    if (!account)
+    if (!refreshSession)
       return Response.json(
         { status: 403 },
         {
@@ -32,7 +35,7 @@ export const loginRequest: RequestType = {
         },
       );
 
-    const result = bcrypt.compareSync(password, account.hash);
+    const result = bcrypt.compareSync(refreshToken, refreshSession.hash);
 
     if (!result)
       return Response.json(
@@ -42,18 +45,27 @@ export const loginRequest: RequestType = {
         },
       );
 
-    const sessionId = getRandomString(16);
+    await System.db.delete(["session", sessionId]);
+    await System.db.delete(["refresh-session", sessionId]);
+
+    const { value: account } = await System.db.get([
+      "accounts",
+      refreshSession.username,
+    ]);
+
+    if (!account)
+      return Response.json(
+        { status: 403 },
+        {
+          status: 403,
+        },
+      );
 
     const token = getRandomString(64);
     const hash = bcrypt.hashSync(token, bcrypt.genSaltSync(8));
 
-    const refreshToken = getRandomString(128);
+    refreshToken = getRandomString(128);
     const refreshHash = bcrypt.hashSync(refreshToken, bcrypt.genSaltSync(8));
-
-    if (account.sessionId) {
-      await System.db.delete(["session", account.sessionId]);
-      await System.db.delete(["refresh-session", account.sessionId]);
-    }
 
     await System.db.set(
       ["session", sessionId],
@@ -68,12 +80,12 @@ export const loginRequest: RequestType = {
       {
         hash: refreshHash,
         accountId: account.accountId,
-        username,
+        username: account.username,
       },
       { expireIn: REFRESH_TOKEN_EXPIRE_TIME },
     );
 
-    await System.db.set(["accounts", username], {
+    await System.db.set(["accounts", account.username], {
       ...account,
       sessionId,
     });
@@ -85,7 +97,7 @@ export const loginRequest: RequestType = {
           sessionId,
           token,
           refreshToken,
-          username,
+          username: account.username,
         },
       },
       { status: 200 },
