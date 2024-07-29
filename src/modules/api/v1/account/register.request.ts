@@ -2,7 +2,7 @@ import { RequestType } from "shared/types/main.ts";
 import { RequestMethod } from "shared/enums/main.ts";
 import { System } from "system/main.ts";
 import * as bcrypt from "bcrypt";
-import {PASSWORD_REGEX, USERNAME_MAX_LENGTH, USERNAME_MIN_LENGTH} from "../../../../shared/consts/main.ts";
+import {PASSWORD_REGEX, USERNAME_MAX_LENGTH, USERNAME_MIN_LENGTH} from "shared/consts/main.ts";
 
 export const registerRequest: RequestType = {
   method: RequestMethod.POST,
