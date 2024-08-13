@@ -74,6 +74,7 @@ export const CaptchaComponent: React.FC<Props> = ({
       style={{
         backgroundColor: "#ffffff",
         cursor: "pointer",
+        width: "fit-content",
       }}
       src={captchaImage}
       alt="captcha"

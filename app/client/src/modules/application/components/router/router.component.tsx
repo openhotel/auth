@@ -7,6 +7,7 @@ import React from "react";
 import { LayoutComponent } from "../layout";
 import { NotFoundComponent } from "../not-found";
 import { LoginComponent } from "modules/login";
+import { RegisterComponent } from "modules/register";
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
       {
         path: "/login",
         Component: () => <LoginComponent />,
+      },
+      {
+        path: "/register",
+        Component: () => <RegisterComponent />,
       },
       {
         path: "/",

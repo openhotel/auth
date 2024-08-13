@@ -9,6 +9,8 @@ export const verifySessionRequest: RequestType = {
   func: async (request, url) => {
     let { sessionId, token } = await request.json();
 
+    //check
+
     if (!sessionId || !token)
       return Response.json(
         { status: 403 },

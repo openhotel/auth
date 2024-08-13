@@ -1,9 +1,9 @@
 import React, { FormEvent, useCallback, useState } from "react";
 import { CaptchaComponent } from "shared/components";
 import { useApi } from "shared/hooks";
-import styles from "./login.module.scss";
+import styles from "./register.module.scss";
 
-export const LoginComponent: React.FC = () => {
+export const RegisterComponent: React.FC = () => {
   const [submittedAt, setSubmittedAt] = useState<number>();
   const [captchaId, setCaptchaId] = useState<string>();
 
