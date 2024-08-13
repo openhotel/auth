@@ -1,4 +1,5 @@
 /build
+/client
 database
 database-shm
 database-wal

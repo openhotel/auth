@@ -8,3 +8,4 @@ export * from "./envs.utils.ts";
 export * from "./os.utils.ts";
 export * from "./path.utils.ts";
 export * from "./update.utils.ts";
+export * from "./content-type.utils.ts";

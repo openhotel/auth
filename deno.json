@@ -1,6 +1,7 @@
 {
   "tasks": {
-    "start": "deno task start:server",
-    "start:server": "cd ./app/server && deno task start"
+    "start": "deno task start:server & deno task start:client",
+    "start:server": "cd ./app/server && deno task start",
+    "start:client": "cd ./app/client && yarn start"
   }
 }
