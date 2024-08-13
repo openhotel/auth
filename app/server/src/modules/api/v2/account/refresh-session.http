@@ -1,0 +1,8 @@
+# Login
+POST http://localhost:2024/api/v2/account/refresh-session
+Content-Type: application/json
+
+{
+  "sessionId": "3cb352bc-ab6e-4a95-bfb4-9970b2aa0212",
+  "refreshToken": "FCOLX30RpOQnqkL0z9F7vNQ3dGkbzWSb0OjFm7Ux2NBwncySilZT4GNg949GvjFwCVekKY9zCIIap2163NSyGtMMYlgTLhufxfUXBJozNMRCUv5HQGtjM3Acd7RWxxCD"
+}

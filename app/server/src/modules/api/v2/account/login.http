@@ -1,0 +1,9 @@
+# Login
+POST http://localhost:2024/api/v2/account/login
+Content-Type: application/json
+
+{
+  "email": "pagoru@gmail.com",
+  "password": "123456Abc*",
+  "captchaId": "TPVY45Lp20OewvNazjPHSmXS50UncMxq"
+}
