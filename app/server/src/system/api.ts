@@ -57,10 +57,11 @@ export const api = () => {
             return new Response("200", {
               status: 200,
             });
+          return new Response("404", { status: 404 });
         } catch (e) {
           console.log(e);
         }
-        return new Response("404", { status: 404 });
+        return new Response("500", { status: 500 });
       },
     );
   };

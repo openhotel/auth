@@ -1,13 +1,11 @@
-import {
-  RouterProvider,
-  createBrowserRouter,
-  Navigate,
-} from "react-router-dom";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import React from "react";
 import { LayoutComponent } from "../layout";
 import { NotFoundComponent } from "../not-found";
 import { LoginComponent } from "modules/login";
 import { RegisterComponent } from "modules/register";
+import { HomeComponent } from "modules/home";
+import { RedirectComponent } from "shared/components";
 
 const router = createBrowserRouter([
   {
@@ -24,17 +22,17 @@ const router = createBrowserRouter([
       },
       {
         path: "/",
-        Component: () => <Navigate to="/login" />,
+        Component: () => <HomeComponent />,
       },
       {
         path: "/404",
         Component: () => <NotFoundComponent />,
       },
-      { path: "*", Component: () => <Navigate to="/404" /> },
+      { path: "*", Component: () => <RedirectComponent url="/404" /> },
     ],
   },
 ]);
 
-export const RouterComponent: React.FC = ({ children }) => (
+export const RouterComponent: React.FC<any> = ({ children }) => (
   <RouterProvider router={router}>${children}</RouterProvider>
 );

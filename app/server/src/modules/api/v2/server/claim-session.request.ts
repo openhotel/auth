@@ -3,15 +3,32 @@ import { RequestMethod } from "shared/enums/main.ts";
 import { System } from "system/main.ts";
 import * as bcrypt from "bcrypt";
 
-export const verifySessionRequest: RequestType = {
+export const claimSessionRequest: RequestType = {
   method: RequestMethod.POST,
-  pathname: "/verify-session",
+  pathname: "/claim-session",
   func: async (request, url) => {
-    let { sessionId, token } = await request.json();
+    let { ticketId, ticketKey, sessionId, token } = await request.json();
 
-    //check
+    if (!ticketId || !ticketKey || !sessionId || !token)
+      return Response.json(
+        { status: 403 },
+        {
+          status: 403,
+        },
+      );
 
-    if (!sessionId || !token)
+    const { value: ticket } = await System.db.get(["tickets", ticketId]);
+
+    if (!ticket || !ticket.isUsed)
+      return Response.json(
+        { status: 403 },
+        {
+          status: 403,
+        },
+      );
+
+    const ticketResult = bcrypt.compareSync(ticketKey, ticket.ticketKeyHash);
+    if (!ticketResult)
       return Response.json(
         { status: 403 },
         {
@@ -56,10 +73,14 @@ export const verifySessionRequest: RequestType = {
       );
 
     delete account.tokenHash;
-
+    
+    //destroy session token (but not refresh token)
     await System.db.set(["accounts", account.accountId], account);
     await System.db.delete(["accountsBySession", sessionId]);
-
+    
+    //destroy ticket
+    await System.db.delete(["tickets", ticketId]);
+    
     return Response.json(
       {
         status: 200,

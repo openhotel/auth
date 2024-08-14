@@ -1,8 +1,0 @@
-# Verify Session
-POST http://localhost:2024/api/v2/server/verify-session
-Content-Type: application/json
-
-{
-  "sessionId": "3cb352bc-ab6e-4a95-bfb4-9970b2aa0212",
-  "token": "cpFMT5OF4eraGUwIzs9ZZPa8K3o9Jk0SEhcInPwNbiOk7404heEP9AeLie1zHbxR"
-}

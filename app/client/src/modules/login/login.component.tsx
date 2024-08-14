@@ -18,8 +18,8 @@ export const LoginComponent: React.FC = () => {
       const password = data.get("password") as string;
 
       login(email, password, captchaId)
-        .then(({ sessionId, token }) => {
-          console.log(sessionId, token);
+        .then(({ redirectUrl }) => {
+          window.location.href = redirectUrl;
         })
         .catch(() => {
           setSubmittedAt(performance.now());

@@ -12,9 +12,24 @@ export const loginRequest: RequestType = {
   method: RequestMethod.POST,
   pathname: "/login",
   func: async (request, url) => {
-    const { email, password, captchaId } = await request.json();
+    const { ticketId, email, password, captchaId } = await request.json();
 
-    if (!(await System.captcha.verify(captchaId)) || !email || !password)
+    if (
+      !(await System.captcha.verify(captchaId)) ||
+      !email ||
+      !password ||
+      !ticketId
+    )
+      return Response.json(
+        { status: 403 },
+        {
+          status: 403,
+        },
+      );
+
+    const { value: ticket } = await System.db.get(["tickets", ticketId]);
+
+    if (!ticket || ticket.isUsed)
       return Response.json(
         { status: 403 },
         {
@@ -75,8 +90,8 @@ export const loginRequest: RequestType = {
 
     await System.db.set(["accounts", account.accountId], {
       ...account,
-      updatedAt: Date.now(),
       sessionId,
+      updatedAt: Date.now(),
       tokenHash: bcrypt.hashSync(token, bcrypt.genSaltSync(8)),
       refreshTokenHash: bcrypt.hashSync(refreshToken, bcrypt.genSaltSync(8)),
     });
@@ -88,11 +103,23 @@ export const loginRequest: RequestType = {
       account.accountId,
       { expireIn: REFRESH_TOKEN_EXPIRE_TIME },
     );
+    await System.db.set(
+      ["tickets", ticket.ticketId],
+      {
+        ...ticket,
+        isUsed: true,
+      },
+      {
+        expireIn: SESSION_EXPIRE_TIME,
+      },
+    );
 
     return Response.json(
       {
         status: 200,
         data: {
+          redirectUrl: `${ticket.redirectUrl}?ticketId=${ticket.ticketId}&sessionId=${sessionId}&token=${token}`,
+
           sessionId,
           token,
           refreshToken,

@@ -12,9 +12,19 @@ export const refreshSessionRequest: RequestType = {
   method: RequestMethod.POST,
   pathname: "/refresh-session",
   func: async (request, url) => {
-    let { sessionId, refreshToken } = await request.json();
+    let { ticketId, sessionId, refreshToken } = await request.json();
 
-    if (!sessionId || !refreshToken)
+    if (!sessionId || !refreshToken || !ticketId)
+      return Response.json(
+        { status: 403 },
+        {
+          status: 403,
+        },
+      );
+
+    const { value: ticket } = await System.db.get(["tickets", ticketId]);
+
+    if (!ticket || ticket.isUsed)
       return Response.json(
         { status: 403 },
         {
@@ -75,11 +85,23 @@ export const refreshSessionRequest: RequestType = {
       account.accountId,
       { expireIn: REFRESH_TOKEN_EXPIRE_TIME },
     );
+    await System.db.set(
+      ["tickets", ticket.ticketId],
+      {
+        ...ticket,
+        isUsed: true,
+      },
+      {
+        expireIn: SESSION_EXPIRE_TIME,
+      },
+    );
 
     return Response.json(
       {
         status: 200,
         data: {
+          redirectUrl: `${ticket.redirectUrl}?ticketId=${ticket.ticketId}&sessionId=${account.sessionId}&token=${token}`,
+
           token,
           refreshToken,
         },

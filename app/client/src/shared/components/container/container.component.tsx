@@ -3,6 +3,7 @@ import styles from "./container.module.scss";
 import { cn } from "shared/utils";
 
 type Props = {
+  children?: React.ReactNode;
   className?: string;
 };
 

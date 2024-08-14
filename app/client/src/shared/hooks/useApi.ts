@@ -1,11 +1,16 @@
 import Cookies from "js-cookie";
 
 export const useApi = () => {
+  const $getTicketId = () =>
+    new URLSearchParams(location.hash).get("#ticketId");
+
   const login = (email: string, password: string, captchaId: string) =>
     new Promise((resolve, reject) => {
       fetch("/api/v2/account/login", {
         method: "POST",
         body: JSON.stringify({
+          ticketId: $getTicketId(),
+
           email,
           password,
           captchaId,
@@ -22,10 +27,7 @@ export const useApi = () => {
               expires: 7,
               sameSite: "strict",
             });
-            return resolve({
-              sessionId: data.sessionId,
-              token: data.token,
-            });
+            return resolve(data);
           }
           reject();
         })
@@ -42,6 +44,8 @@ export const useApi = () => {
       fetch("/api/v2/account/refresh-session", {
         method: "POST",
         body: JSON.stringify({
+          ticketId: $getTicketId(),
+
           sessionId,
           refreshToken,
         }),
@@ -57,10 +61,7 @@ export const useApi = () => {
               expires: 7,
               sameSite: "strict",
             });
-            return resolve({
-              sessionId: sessionId,
-              token: data.token,
-            });
+            return resolve(data);
           }
           Cookies.remove("sessionId");
           Cookies.remove("refreshToken");
