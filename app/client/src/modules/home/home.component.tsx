@@ -19,5 +19,5 @@ export const HomeComponent: React.FC = () => {
       });
   }, [refreshSession]);
 
-  return !isReady ? <div /> : <RedirectComponent url="/login" />;
+  return !isReady ? <div /> : <RedirectComponent to="/login" />;
 };

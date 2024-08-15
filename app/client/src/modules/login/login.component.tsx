@@ -1,13 +1,14 @@
 import React, { FormEvent, useCallback, useState } from "react";
-import { CaptchaComponent } from "shared/components";
+import { CaptchaComponent, LinkComponent } from "shared/components";
 import { useApi } from "shared/hooks";
 import styles from "./login.module.scss";
+import { redirectToMainHotelUrl } from "shared/utils/urls.utils";
 
 export const LoginComponent: React.FC = () => {
   const [submittedAt, setSubmittedAt] = useState<number>();
   const [captchaId, setCaptchaId] = useState<string>();
 
-  const { login } = useApi();
+  const { login, getTicketId } = useApi();
 
   const onSubmit = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {
@@ -21,12 +22,14 @@ export const LoginComponent: React.FC = () => {
         .then(({ redirectUrl }) => {
           window.location.href = redirectUrl;
         })
-        .catch(() => {
+        .catch(({ status }) => {
           setSubmittedAt(performance.now());
         });
     },
     [captchaId],
   );
+
+  if (!getTicketId()) return redirectToMainHotelUrl();
 
   return (
     <div>
@@ -36,6 +39,7 @@ export const LoginComponent: React.FC = () => {
         <CaptchaComponent submittedAt={submittedAt} onResolve={setCaptchaId} />
         <button type="submit">Login</button>
       </form>
+      <LinkComponent to="/register">/register</LinkComponent>
     </div>
   );
 };

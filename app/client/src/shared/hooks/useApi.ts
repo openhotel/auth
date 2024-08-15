@@ -1,15 +1,20 @@
 import Cookies from "js-cookie";
+import { redirectToMainHotelUrl } from "shared/utils/urls.utils";
 
 export const useApi = () => {
-  const $getTicketId = () =>
-    new URLSearchParams(location.hash).get("#ticketId");
+  const getTicketId = () => new URLSearchParams(location.hash).get("#ticketId");
+
+  const clearSessionCookies = () => {
+    Cookies.remove("sessionId");
+    Cookies.remove("refreshToken");
+  };
 
   const login = (email: string, password: string, captchaId: string) =>
     new Promise((resolve, reject) => {
       fetch("/api/v2/account/login", {
         method: "POST",
         body: JSON.stringify({
-          ticketId: $getTicketId(),
+          ticketId: getTicketId(),
 
           email,
           password,
@@ -18,20 +23,19 @@ export const useApi = () => {
       })
         .then((data) => data.json())
         .then(({ status, data }) => {
-          if (status === 200) {
-            Cookies.set("sessionId", data.sessionId, {
-              expires: 7,
-              sameSite: "strict",
-            });
-            Cookies.set("refreshToken", data.refreshToken, {
-              expires: 7,
-              sameSite: "strict",
-            });
-            return resolve(data);
-          }
-          reject();
+          if (status === 410) return redirectToMainHotelUrl();
+          if (status !== 200) return reject({ status });
+          Cookies.set("sessionId", data.sessionId, {
+            expires: 7,
+            sameSite: "strict",
+          });
+          Cookies.set("refreshToken", data.refreshToken, {
+            expires: 7,
+            sameSite: "strict",
+          });
+          resolve(data);
         })
-        .catch(reject);
+        .catch(() => reject({ status: 600 }));
     });
 
   const refreshSession = () =>
@@ -44,7 +48,7 @@ export const useApi = () => {
       fetch("/api/v2/account/refresh-session", {
         method: "POST",
         body: JSON.stringify({
-          ticketId: $getTicketId(),
+          ticketId: getTicketId(),
 
           sessionId,
           refreshToken,
@@ -52,6 +56,8 @@ export const useApi = () => {
       })
         .then((data) => data.json())
         .then(({ status, data }) => {
+          console.log(status, data);
+          if (status === 410) return redirectToMainHotelUrl();
           if (status === 200) {
             Cookies.set("sessionId", sessionId, {
               expires: 7,
@@ -63,17 +69,17 @@ export const useApi = () => {
             });
             return resolve(data);
           }
-          Cookies.remove("sessionId");
-          Cookies.remove("refreshToken");
-          reject();
+          clearSessionCookies();
+          reject({ status });
         })
-        .catch(reject);
+        .catch(() => reject({ status: 600 }));
     });
 
   const register = (
     email: string,
     username: string,
     password: string,
+    rePassword: string,
     captchaId: string,
   ) =>
     new Promise<void>((resolve, reject) => {
@@ -83,17 +89,53 @@ export const useApi = () => {
           email,
           username,
           password,
+          rePassword,
           captchaId,
         }),
       })
         .then((data) => data.json())
-        .then(({ status }) => (status === 200 ? resolve() : reject()))
-        .catch(reject);
+        .then(({ status }) => (status === 200 ? resolve() : reject({ status })))
+        .catch(() => reject({ status: 600 }));
+    });
+
+  const logout = () =>
+    new Promise((resolve) => {
+      const sessionId = Cookies.get("sessionId");
+      const refreshToken = Cookies.get("refreshToken");
+
+      clearSessionCookies();
+
+      if (!sessionId || !refreshToken) return resolve({});
+
+      fetch("/api/v2/account/logout", {
+        method: "POST",
+        body: JSON.stringify({
+          sessionId,
+          refreshToken,
+        }),
+      })
+        .then((data) => data.json())
+        .then(resolve)
+        .catch(resolve);
+    });
+
+  const verify = (id: string, token: string) =>
+    new Promise<void>((resolve, reject) => {
+      if (!id || !token) return reject({ status: 700 });
+
+      fetch(`/api/v2/account/verify?id=${id}&token=${token}`)
+        .then((data) => data.json())
+        .then(({ status }) => (status === 200 ? resolve() : reject({ status })))
+        .catch(() => reject({ status: 600 }));
     });
 
   return {
     login,
     refreshSession,
     register,
+    logout,
+    clearSessionCookies,
+    getTicketId,
+    verify,
   };
 };

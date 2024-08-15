@@ -14,13 +14,15 @@ export const registerRequest: RequestType = {
   method: RequestMethod.POST,
   pathname: "/register",
   func: async (request, url) => {
-    const { email, username, password, captchaId } = await request.json();
+    const { email, username, password, rePassword, captchaId } =
+      await request.json();
 
     if (
       !(await System.captcha.verify(captchaId)) ||
       !email ||
       !username ||
-      !password
+      !password ||
+      !rePassword
     )
       return Response.json(
         { status: 403 },
@@ -32,7 +34,8 @@ export const registerRequest: RequestType = {
     if (
       !new RegExp(EMAIL_REGEX).test(email) ||
       !new RegExp(USERNAME_REGEX).test(username) ||
-      !new RegExp(PASSWORD_REGEX).test(password)
+      !new RegExp(PASSWORD_REGEX).test(password) ||
+      password !== rePassword
     )
       return Response.json(
         { status: 400 },
@@ -65,7 +68,7 @@ export const registerRequest: RequestType = {
 
     const { url: apiUrl } = System.getConfig();
 
-    const verifyUrl = `${apiUrl}/api/v2/account/verify?id=${verifyId}&token=${verifyToken}`;
+    const verifyUrl = `${apiUrl}/verify?id=${verifyId}&token=${verifyToken}`;
     System.email.send(
       email,
       "verify your account",

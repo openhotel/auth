@@ -14,7 +14,7 @@ export const refreshSessionRequest: RequestType = {
   func: async (request, url) => {
     let { ticketId, sessionId, refreshToken } = await request.json();
 
-    if (!sessionId || !refreshToken || !ticketId)
+    if (!sessionId || !refreshToken)
       return Response.json(
         { status: 403 },
         {
@@ -22,13 +22,21 @@ export const refreshSessionRequest: RequestType = {
         },
       );
 
+    //Allow to redirect to retrieve a new ticket
+    if (!ticketId)
+      return Response.json(
+        { status: 410 },
+        {
+          status: 410,
+        },
+      );
     const { value: ticket } = await System.db.get(["tickets", ticketId]);
 
     if (!ticket || ticket.isUsed)
       return Response.json(
-        { status: 403 },
+        { status: 410 },
         {
-          status: 403,
+          status: 410,
         },
       );
 

@@ -5,6 +5,7 @@ import { registerRequest } from "./register.request.ts";
 import { loginRequest } from "./login.request.ts";
 import { verifyRequest } from "./verify.request.ts";
 import { refreshSessionRequest } from "./refresh-session.request.ts";
+import { logoutRequest } from "./logout.request.ts";
 
 export const accountRequestList: RequestType[] = getPathRequestList({
   requestList: [
@@ -12,6 +13,7 @@ export const accountRequestList: RequestType[] = getPathRequestList({
     loginRequest,
     verifyRequest,
     refreshSessionRequest,
+    logoutRequest,
   ],
   pathname: "/account",
 });

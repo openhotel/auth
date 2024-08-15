@@ -6,6 +6,7 @@ import { LoginComponent } from "modules/login";
 import { RegisterComponent } from "modules/register";
 import { HomeComponent } from "modules/home";
 import { RedirectComponent } from "shared/components";
+import { VerifyComponent } from "modules/verify";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
         Component: () => <RegisterComponent />,
       },
       {
+        path: "/verify",
+        Component: () => <VerifyComponent />,
+      },
+      {
         path: "/",
         Component: () => <HomeComponent />,
       },
@@ -28,7 +33,7 @@ const router = createBrowserRouter([
         path: "/404",
         Component: () => <NotFoundComponent />,
       },
-      { path: "*", Component: () => <RedirectComponent url="/404" /> },
+      { path: "*", Component: () => <RedirectComponent to="/404" /> },
     ],
   },
 ]);

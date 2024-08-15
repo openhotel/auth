@@ -6,5 +6,6 @@ Content-Type: application/json
   "email": "pagoru@gmail.com",
   "username": "pagoru",
   "password": "123456Abc*",
+  "rePassword": "123456Abc*",
   "captchaId": "SmiRZmrTJVOPVft9CzcD189PqXE9lfBQ"
 }

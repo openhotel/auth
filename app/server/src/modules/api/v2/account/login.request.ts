@@ -31,9 +31,9 @@ export const loginRequest: RequestType = {
 
     if (!ticket || ticket.isUsed)
       return Response.json(
-        { status: 403 },
+        { status: 410 },
         {
-          status: 403,
+          status: 410,
         },
       );
 
