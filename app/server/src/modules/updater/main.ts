@@ -28,7 +28,7 @@ export const load = async (envs: Envs): Promise<boolean> => {
 
   try {
     const { tag_name: latestVersion, assets } = await fetch(
-      "https://api.github.com/repos/openhotel/auth/releases/latest",
+      "https://api.github.com/repos/openhotel/auth/releases/latest"
     ).then((data) => data.json());
 
     const getSlicedVersion = (version: string): (number | string)[] =>
@@ -41,7 +41,7 @@ export const load = async (envs: Envs): Promise<boolean> => {
         });
 
     const [oldMajor, oldMinor, oldPatch, oldExtra] = getSlicedVersion(
-      envs.version,
+      envs.version
     );
     const [newMajor, newMinor, newPatch, newExtra] =
       getSlicedVersion(latestVersion);
@@ -61,7 +61,7 @@ export const load = async (envs: Envs): Promise<boolean> => {
 
     const osAsset = assets.find(
       ({ name }: { name: string }) =>
-        name.includes(osName) && (arch === null || name.includes(arch)),
+        name.includes(osName) && (arch === null || name.includes(arch))
     );
 
     if (!osAsset) {
@@ -75,18 +75,17 @@ export const load = async (envs: Envs): Promise<boolean> => {
     console.log("Update downloaded!");
     const dirPath = getPath();
     const updateFilePath = getTemporalUpdateFilePathname();
-    const updateFile = path.join(dirPath, `${osAsset.name}_update`);
-    const updatedFile = path.join(dirPath, osAsset.name);
+    const updatedFile = path.join(dirPath, `update.zip`);
 
-    console.log("Saving update!", updateFile);
+    console.log("Saving update files!");
     await Deno.writeFile(
-      updateFile,
+      updatedFile,
       new Uint8Array(await buildAsset.arrayBuffer()),
       {
-        mode: 0o777,
-      },
+        mode: 0x777,
+      }
     );
-    await Deno.chmod(updateFile, 0o777);
+    await Deno.chmod(updatedFile, 0o777);
 
     const isWindows = os === OS.WINDOWS;
 
@@ -96,21 +95,17 @@ export const load = async (envs: Envs): Promise<boolean> => {
 
     const ps1 = `#!/usr/bin/env pwsh
     	Start-Sleep -Milliseconds 500
-    	if (Test-Path "${updatedFile}") {
-        Remove-Item "${updatedFile}" -verbose
-      }
-      Move-Item -Path "${updateFile}" -Destination "${updatedFile}"
+    	Expand-Archive -Force -LiteralPath "${updatedFile}" -DestinationPath "${dirPath}"
     `;
     const bash = `#! /bin/bash
-      touch '${updatedFile}' && rm '${updatedFile}'
-    	mv '${updateFile}' '${updatedFile}'
-    	chmod -R 777 ${updatedFile}
+    	unzip -o '${updatedFile}' -d '${dirPath}'
+      chmod -R 777 ${dirPath}
     `;
 
     if (isWindows) {
       //TODO #7 auto-updater not working on windows, because the file is already in use by this execution
       console.log(
-        "Run ./updater.ps1 to apply the update and then start again!",
+        "Run ./updater.ps1 to apply the update and then start again!"
       );
       return true;
     }

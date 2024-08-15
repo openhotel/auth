@@ -1,9 +1,10 @@
 {
+  "type": "module",
+  "license": "CC BY-NC-SA 4.0",
   "scripts": {
     "start": "vite --host",
     "build": "vite build"
   },
-  "type": "module",
   "devDependencies": {
     "@types/react": "18.3.3",
     "@types/js-cookie": "3.0.6",

@@ -12,7 +12,7 @@ export const getConfig = async (): Promise<ConfigTypes> => {
     port: config?.port || CONFIG_DEFAULT.port,
     url: config?.url || CONFIG_DEFAULT.url,
     database: {
-      filename: config?.database.filename || CONFIG_DEFAULT.database.filename,
+      filename: config?.database?.filename || CONFIG_DEFAULT.database.filename,
     },
     captcha: {
       enabled: config?.captcha?.enabled ?? CONFIG_DEFAULT.captcha.enabled,

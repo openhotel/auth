@@ -2,7 +2,7 @@ import React, { FormEvent, useCallback, useState } from "react";
 import { CaptchaComponent, LinkComponent } from "shared/components";
 import { useApi } from "shared/hooks";
 import styles from "./login.module.scss";
-import { redirectToMainHotelUrl } from "shared/utils/urls.utils";
+import { redirectToFallbackRedirectUrl } from "shared/utils/urls.utils";
 
 export const LoginComponent: React.FC = () => {
   const [submittedAt, setSubmittedAt] = useState<number>();
@@ -26,10 +26,10 @@ export const LoginComponent: React.FC = () => {
           setSubmittedAt(performance.now());
         });
     },
-    [captchaId],
+    [captchaId]
   );
 
-  if (!getTicketId()) return redirectToMainHotelUrl();
+  if (!getTicketId()) return redirectToFallbackRedirectUrl();
 
   return (
     <div>

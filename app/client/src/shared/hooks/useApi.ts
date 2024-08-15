@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import { redirectToMainHotelUrl } from "shared/utils/urls.utils";
+import { redirectToFallbackRedirectUrl } from "shared/utils/urls.utils";
 
 export const useApi = () => {
   const getTicketId = () => new URLSearchParams(location.hash).get("#ticketId");
@@ -7,6 +7,11 @@ export const useApi = () => {
   const clearSessionCookies = () => {
     Cookies.remove("sessionId");
     Cookies.remove("refreshToken");
+  };
+
+  const setFallbackRedirectUrl = (redirectUrl: string) => {
+    const { href, search } = new URL(redirectUrl);
+    localStorage.setItem("fallbackRedirectUrl", href.replace(search, ""));
   };
 
   const login = (email: string, password: string, captchaId: string) =>
@@ -23,7 +28,7 @@ export const useApi = () => {
       })
         .then((data) => data.json())
         .then(({ status, data }) => {
-          if (status === 410) return redirectToMainHotelUrl();
+          if (status === 410) return redirectToFallbackRedirectUrl();
           if (status !== 200) return reject({ status });
           Cookies.set("sessionId", data.sessionId, {
             expires: 7,
@@ -33,6 +38,7 @@ export const useApi = () => {
             expires: 7,
             sameSite: "strict",
           });
+          setFallbackRedirectUrl(data.redirectUrl);
           resolve(data);
         })
         .catch(() => reject({ status: 600 }));
@@ -56,8 +62,7 @@ export const useApi = () => {
       })
         .then((data) => data.json())
         .then(({ status, data }) => {
-          console.log(status, data);
-          if (status === 410) return redirectToMainHotelUrl();
+          if (status === 410) return redirectToFallbackRedirectUrl();
           if (status === 200) {
             Cookies.set("sessionId", sessionId, {
               expires: 7,
@@ -67,6 +72,7 @@ export const useApi = () => {
               expires: 7,
               sameSite: "strict",
             });
+            setFallbackRedirectUrl(data.redirectUrl);
             return resolve(data);
           }
           clearSessionCookies();
@@ -80,7 +86,7 @@ export const useApi = () => {
     username: string,
     password: string,
     rePassword: string,
-    captchaId: string,
+    captchaId: string
   ) =>
     new Promise<void>((resolve, reject) => {
       fetch("/api/v2/account/register", {

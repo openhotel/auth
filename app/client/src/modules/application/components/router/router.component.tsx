@@ -7,6 +7,7 @@ import { RegisterComponent } from "modules/register";
 import { HomeComponent } from "modules/home";
 import { RedirectComponent } from "shared/components";
 import { VerifyComponent } from "modules/verify";
+import { LogoutComponent } from "modules/logout";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: "/verify",
         Component: () => <VerifyComponent />,
+      },
+      {
+        path: "/logout",
+        Component: () => <LogoutComponent />,
       },
       {
         path: "/",
