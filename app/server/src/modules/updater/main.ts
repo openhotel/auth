@@ -28,7 +28,7 @@ export const load = async (envs: Envs): Promise<boolean> => {
 
   try {
     const { tag_name: latestVersion, assets } = await fetch(
-      "https://api.github.com/repos/openhotel/auth/releases/latest"
+      "https://api.github.com/repos/openhotel/auth/releases/latest",
     ).then((data) => data.json());
 
     const getSlicedVersion = (version: string): (number | string)[] =>
@@ -41,7 +41,7 @@ export const load = async (envs: Envs): Promise<boolean> => {
         });
 
     const [oldMajor, oldMinor, oldPatch, oldExtra] = getSlicedVersion(
-      envs.version
+      envs.version,
     );
     const [newMajor, newMinor, newPatch, newExtra] =
       getSlicedVersion(latestVersion);
@@ -61,7 +61,7 @@ export const load = async (envs: Envs): Promise<boolean> => {
 
     const osAsset = assets.find(
       ({ name }: { name: string }) =>
-        name.includes(osName) && (arch === null || name.includes(arch))
+        name.includes(osName) && (arch === null || name.includes(arch)),
     );
 
     if (!osAsset) {
@@ -83,7 +83,7 @@ export const load = async (envs: Envs): Promise<boolean> => {
       new Uint8Array(await buildAsset.arrayBuffer()),
       {
         mode: 0x777,
-      }
+      },
     );
     await Deno.chmod(updatedFile, 0o777);
 
@@ -105,7 +105,7 @@ export const load = async (envs: Envs): Promise<boolean> => {
     if (isWindows) {
       //TODO #7 auto-updater not working on windows, because the file is already in use by this execution
       console.log(
-        "Run ./updater.ps1 to apply the update and then start again!"
+        "Run ./updater.ps1 to apply the update and then start again!",
       );
       return true;
     }

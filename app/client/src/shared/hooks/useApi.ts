@@ -86,7 +86,7 @@ export const useApi = () => {
     username: string,
     password: string,
     rePassword: string,
-    captchaId: string
+    captchaId: string,
   ) =>
     new Promise<void>((resolve, reject) => {
       fetch("/api/v2/account/register", {

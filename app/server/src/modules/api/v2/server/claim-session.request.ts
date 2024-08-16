@@ -73,14 +73,14 @@ export const claimSessionRequest: RequestType = {
       );
 
     delete account.tokenHash;
-    
+
     //destroy session token (but not refresh token)
     await System.db.set(["accounts", account.accountId], account);
     await System.db.delete(["accountsBySession", sessionId]);
-    
+
     //destroy ticket
     await System.db.delete(["tickets", ticketId]);
-    
+
     return Response.json(
       {
         status: 200,

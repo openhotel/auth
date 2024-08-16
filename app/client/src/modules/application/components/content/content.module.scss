@@ -1,12 +1,12 @@
 @import "../../../../shared/styles/consts.module";
 
 .content {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    max-width: 200px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-width: 200px;
 
-    .outlet {
-        flex: 1;
-    }
+  .outlet {
+    flex: 1;
+  }
 }

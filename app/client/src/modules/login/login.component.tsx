@@ -26,7 +26,7 @@ export const LoginComponent: React.FC = () => {
           setSubmittedAt(performance.now());
         });
     },
-    [captchaId]
+    [captchaId],
   );
 
   if (!getTicketId()) return redirectToFallbackRedirectUrl();
