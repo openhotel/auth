@@ -59,6 +59,7 @@ jobs:
   auth-build:
     name: "Build Auth"
 
+    needs: [client-build]
     runs-on: ubuntu-latest
     strategy:
       matrix:
