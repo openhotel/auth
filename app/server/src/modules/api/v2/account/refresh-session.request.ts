@@ -125,6 +125,7 @@ export const refreshSessionRequest: RequestType = {
           expireIn: SERVER_SESSION_EXPIRE_TIME * 5,
         },
       );
+      await System.sessions.checkAccountSession(account.accountId);
     }
 
     return Response.json(
