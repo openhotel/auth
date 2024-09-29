@@ -23,18 +23,9 @@ export const sessions = () => {
           {
             headers,
           },
-        )
-          .catch(() => {
-            console.log(
-              `${session.server}/auth/user-disconnected?accountId=${accountId} KO`,
-            );
-            //we don't really care if server receives our petition, the session is being invalidated anyway
-          })
-          .then(() => {
-            console.log(
-              `${session.server}/auth/user-disconnected?accountId=${accountId} OK`,
-            );
-          });
+        ).catch(() => {
+          //we don't really care if server receives our petition, the session is being invalidated anyway
+        });
         delete sessionMap[accountId];
       };
 
@@ -57,12 +48,8 @@ export const sessions = () => {
     for (const {
       key: [, accountId],
       value: session,
-    } of sessionList) {
+    } of sessionList)
       sessionMap[accountId] = session;
-      console.log(
-        `- ${accountId} ${session.ip} ${session.server} ${session.serverIp}`,
-      );
-    }
   };
 
   const load = () => {
