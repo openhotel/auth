@@ -25,7 +25,6 @@ export const sessions = () => {
       `Checking sessions... (${currentSessions.length}..${targetSessions.length})`,
     );
 
-    console.warn(sessionMap, "<<<< 123");
     const accountCheckList = [
       ...new Set([
         ...currentSessions,
@@ -56,8 +55,8 @@ export const sessions = () => {
     const session = sessionMap[accountId];
 
     console.warn(
-      sessionMap,
-      "--",
+      accountId,
+      "->",
       session?.server,
       "->",
       foundSession?.value?.server,
@@ -67,10 +66,9 @@ export const sessions = () => {
     //if account has no active session or old session
     if (!isFoundSessionClaimed && !session) return;
 
-    //account is disconnected, disconnect from las server
+    //account is disconnected, disconnect from last server
     if (!isFoundSessionClaimed) {
       $disconnectFromLastServer(accountId, session.server);
-      delete sessionMap[accountId];
       return;
     }
 
