@@ -16,10 +16,9 @@ export const sessions = () => {
       const session = sessionMap[accountId];
       const $disconnectFromLastServer = () => {
         console.log("disconnect", session.server, accountId);
-        fetch(`${session.server}/api/user-disconnected`, {
-          method: "POST",
-          body: JSON.stringify({ accountId }),
-        }).catch(() => {
+        fetch(
+          `${session.server}/api/user-disconnected?accountId=${accountId}`,
+        ).catch(() => {
           //we don't really care if server receives our petition, the session is being invalidated anyway
         });
       };
