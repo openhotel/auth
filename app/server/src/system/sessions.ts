@@ -9,9 +9,11 @@ export const sessions = () => {
     const headers = new Headers();
     headers.append("auth-server", performance.now() + "");
 
+    console.error(`${server}/auth/user-disconnected?accountId=${accountId}`);
     fetch(`${server}/auth/user-disconnected?accountId=${accountId}`, {
       headers,
-    }).catch(() => {
+    }).catch((e) => {
+      console.error(e);
       //we don't really care if server receives our petition, the session is being invalidated anyway
     });
     delete sessionMap[accountId];
