@@ -55,7 +55,14 @@ export const sessions = () => {
     const isFoundSessionClaimed = foundSession?.value?.claimed;
     const session = sessionMap[accountId];
 
-    console.warn(sessionMap, session, foundSession, "<<<<");
+    console.warn(
+      sessionMap,
+      "--",
+      session?.server,
+      "->",
+      foundSession?.server,
+      "<<<<",
+    );
 
     //if account has no active session or old session
     if (!isFoundSessionClaimed && !session) return;
