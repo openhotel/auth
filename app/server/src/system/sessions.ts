@@ -23,9 +23,18 @@ export const sessions = () => {
           {
             headers,
           },
-        ).catch(() => {
-          //we don't really care if server receives our petition, the session is being invalidated anyway
-        });
+        )
+          .catch(() => {
+            console.log(
+              `${session.server}/auth/user-disconnected?accountId=${accountId} KO`,
+            );
+            //we don't really care if server receives our petition, the session is being invalidated anyway
+          })
+          .then(() => {
+            console.log(
+              `${session.server}/auth/user-disconnected?accountId=${accountId} OK`,
+            );
+          });
         delete sessionMap[accountId];
       };
 
