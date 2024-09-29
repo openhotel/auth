@@ -25,17 +25,16 @@ export const sessions = () => {
       `Checking sessions... (${currentSessions.length}..${targetSessions.length})`,
     );
 
-    //check disconnected accounts
-    for (const accountId of currentSessions)
-      await checkAccountSession(accountId);
+    console.warn(sessionMap, "<<<< 123");
+    const accountCheckList = [
+      ...new Set([
+        ...currentSessions,
+        ...targetSessions.map<string>(({ key: [, accountId] }) => accountId),
+      ]),
+    ];
 
-    //update sessions
-    for (const {
-      key: [, accountId],
-    } of targetSessions) {
-      if (currentSessions.includes(accountId)) continue;
-      await checkAccountSession(accountId);
-    }
+    //check accounts
+    for (const accountId of accountCheckList) checkAccountSession(accountId);
   };
 
   const load = () => {
@@ -56,7 +55,7 @@ export const sessions = () => {
     const isFoundSessionClaimed = foundSession?.value?.claimed;
     const session = sessionMap[accountId];
 
-    console.warn(session, foundSession, "<<<<");
+    console.warn(sessionMap, session, foundSession, "<<<<");
 
     //if account has no active session or old session
     if (!isFoundSessionClaimed && !session) return;
