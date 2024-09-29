@@ -19,6 +19,9 @@ export const api = () => {
 
         try {
           const { url, method } = request;
+          if (method === "OPTIONS")
+            return new Response(null, { headers, status: 204 });
+
           const parsedUrl = new URL(url);
 
           if (!parsedUrl.pathname.startsWith("/api")) {
