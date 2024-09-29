@@ -43,7 +43,7 @@ export const AdminComponent: React.FC = () => {
         //TODO is updating!
         setTimeout(() => {
           window.location.reload();
-        }, 30_000);
+        }, 10_000);
     });
   };
 
