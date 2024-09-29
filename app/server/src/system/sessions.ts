@@ -60,7 +60,7 @@ export const sessions = () => {
       "--",
       session?.server,
       "->",
-      foundSession?.server,
+      foundSession?.value?.server,
       "<<<<",
     );
 
