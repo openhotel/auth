@@ -158,15 +158,6 @@ export const loginRequest: RequestType = {
 
       //server session
       const ip = getIpFromRequest(request);
-      console.warn(
-        "<<<<<<<<",
-        account.accountId,
-        sessionId,
-        ticketId,
-        ticket.redirectUrl,
-        ip,
-        SERVER_SESSION_EXPIRE_TIME * 5,
-      );
       await System.db.set(
         ["serverSessionByAccount", account.accountId],
         {

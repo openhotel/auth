@@ -70,7 +70,6 @@ export const claimSessionRequest: RequestType = {
       account.accountId,
     ]);
 
-    console.warn("<<<<<<<< 6", serverSession, account.accountId);
     if (!serverSession)
       return Response.json(
         { status: 403 },
@@ -81,7 +80,6 @@ export const claimSessionRequest: RequestType = {
 
     const result = bcrypt.compareSync(token, account.tokenHash);
 
-    console.warn("<<<<<<<< 7");
     if (!result)
       return Response.json(
         { status: 403 },
