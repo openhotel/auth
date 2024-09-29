@@ -16,7 +16,6 @@ export const sessions = () => {
       console.error(e);
       //we don't really care if server receives our petition, the session is being invalidated anyway
     });
-    delete sessionMap[accountId];
   };
 
   const $checkSessions = async () => {
@@ -27,15 +26,16 @@ export const sessions = () => {
     );
 
     //check disconnected accounts
-    for (const accountId of Object.keys(sessionMap))
+    for (const accountId of currentSessions)
       await checkAccountSession(accountId);
 
     //update sessions
     for (const {
       key: [, accountId],
-      value: session,
-    } of targetSessions)
-      sessionMap[accountId] = session;
+    } of targetSessions) {
+      if (currentSessions.includes(accountId)) continue;
+      await checkAccountSession(accountId);
+    }
   };
 
   const load = () => {
@@ -62,27 +62,25 @@ export const sessions = () => {
     if (!isFoundSessionClaimed && !session) return;
 
     //account is disconnected, disconnect from las server
-    if (!isFoundSessionClaimed)
-      return $disconnectFromLastServer(accountId, session.server);
-
-    const currentSession = foundSession.value;
-
-    //there's no current session active, we assign the current one
-    if (!session) {
-      sessionMap[accountId] = currentSession;
+    if (!isFoundSessionClaimed) {
+      $disconnectFromLastServer(accountId, session.server);
+      delete sessionMap[accountId];
       return;
     }
 
-    //check if session server changed if so, disconnect from last server
+    const currentSession = foundSession.value;
+
+    //check if session server exists and changed if so disconnect from last server
     if (
-      session.sessionId !== currentSession.sessionId ||
-      session.ticketId !== currentSession.ticketId ||
-      session.server !== currentSession.server
+      session &&
+      (session.sessionId !== currentSession.sessionId ||
+        session.ticketId !== currentSession.ticketId ||
+        session.server !== currentSession.server)
     ) {
       $disconnectFromLastServer(accountId, session.server);
-      // reassign data
-      sessionMap[accountId] = currentSession;
     }
+    //reassign server session
+    sessionMap[accountId] = currentSession;
   };
 
   return {
