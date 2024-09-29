@@ -1,5 +1,9 @@
 import { requestV2List } from "modules/api/v2/main.ts";
-import { appendCORSHeaders, getContentType } from "shared/utils/main.ts";
+import {
+  appendCORSHeaders,
+  getContentType,
+  getCORSHeaders,
+} from "shared/utils/main.ts";
 import { System } from "system/main.ts";
 
 export const api = () => {
@@ -20,7 +24,10 @@ export const api = () => {
         try {
           const { url, method } = request;
           if (method === "OPTIONS")
-            return new Response(null, { headers, status: 204 });
+            return new Response(null, {
+              headers: getCORSHeaders(),
+              status: 204,
+            });
 
           const parsedUrl = new URL(url);
 
