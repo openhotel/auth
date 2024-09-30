@@ -20,17 +20,26 @@ export const sessions = () => {
 
   const $checkSessions = async () => {
     const currentSessions = Object.keys(sessionMap);
-    const targetSessions = await getServerSessionList();
+    const targetSessions = (await getServerSessionList()).map<string>(
+      ({ key: [, accountId] }) => accountId,
+    );
     console.log(
       `Checking sessions... (${currentSessions.length}..${targetSessions.length})`,
     );
 
+    const toDeleteSessions = currentSessions.filter(
+      (accountId) => !targetSessions.includes(accountId),
+    );
+
+    //remove not active sessions
+    for (const accountId of toDeleteSessions) {
+      $disconnectFromLastServer(accountId, sessionMap[accountId].server);
+      delete sessionMap[accountId];
+    }
+
     const accountCheckList = [
-      ...new Set([
-        ...currentSessions,
-        ...targetSessions.map<string>(({ key: [, accountId] }) => accountId),
-      ]),
-    ];
+      ...new Set([...currentSessions, ...targetSessions]),
+    ].filter((accountId) => toDeleteSessions.includes(accountId));
 
     //check accounts
     for (const accountId of accountCheckList) checkAccountSession(accountId);
@@ -50,8 +59,6 @@ export const sessions = () => {
       "serverSessionByAccount",
       accountId,
     ]);
-    //check if is server claimed the session
-    const isFoundSessionClaimed = foundSession?.value?.claimed;
     const session = sessionMap[accountId];
 
     console.warn(
@@ -62,15 +69,6 @@ export const sessions = () => {
       foundSession?.value?.server,
       "<<<<",
     );
-
-    //if account has no active session or old session
-    if (!isFoundSessionClaimed && !session) return;
-
-    //account is disconnected, disconnect from last server
-    if (!isFoundSessionClaimed) {
-      $disconnectFromLastServer(accountId, session.server);
-      return;
-    }
 
     const currentSession = foundSession.value;
 
