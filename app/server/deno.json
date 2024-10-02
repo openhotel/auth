@@ -14,6 +14,9 @@
     "build": "(deno task compile:linux) & (deno task compile:linux_aarch64) & (deno task compile:darwin) & (deno task compile:windows)"
   },
   "imports": {
+    "@oh/queue": "jsr:@oh/queue@1.1.1",
+    "@oh/updater": "jsr:@oh/updater@1.0.3",
+
     "shared/": "./src/shared/",
     "system/": "./src/system/",
     "modules/": "./src/modules/",
@@ -27,6 +30,5 @@
     "nodemailer": "npm:nodemailer@6.9.15",
     "otp": "https://deno.land/x/otpauth@v9.3.3/dist/otpauth.esm.js",
 
-    "@oh/queue": "jsr:@oh/queue@1.1.1"
   }
 }
