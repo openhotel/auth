@@ -18,7 +18,7 @@ export const CaptchaComponent: React.FC<Props> = ({
     () =>
       fetch(`${CAPTCHA_URL}/v1/captcha?id=${CAPTCHA_ID}`)
         .then((data) => data.json())
-        .then(({ sessionId, image, question }) => {
+        .then(({ sessionId, image }) => {
           setSessionId(sessionId);
           setCaptchaImage(image);
         }),
