@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { CAPTCHA_ID, CAPTCHA_URL } from "shared/consts";
 
 type Props = {
   submittedAt: number;
   onResolve: (sessionId: string) => void;
 };
-
-const CAPTCHA_ID = `hwoFA5ORzPAYkHyCNElRU0F3WXAD0ZN9`;
 
 export const CaptchaComponent: React.FC<Props> = ({
   submittedAt,
@@ -17,7 +16,7 @@ export const CaptchaComponent: React.FC<Props> = ({
 
   const $refreshCaptcha = useCallback(
     () =>
-      fetch(`https://captcha.openhotel.club/v1/captcha?id=${CAPTCHA_ID}`)
+      fetch(`${CAPTCHA_URL}/v1/captcha?id=${CAPTCHA_ID}`)
         .then((data) => data.json())
         .then(({ sessionId, image, question }) => {
           setSessionId(sessionId);
@@ -43,7 +42,7 @@ export const CaptchaComponent: React.FC<Props> = ({
       const headers = new Headers();
       headers.append("Content-Type", "application/json");
 
-      fetch("https://captcha.openhotel.club/v1/captcha/response", {
+      fetch(`${CAPTCHA_URL}/v1/captcha/response`, {
         method: "POST",
         headers,
         body: JSON.stringify({
