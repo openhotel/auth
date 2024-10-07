@@ -1,7 +1,6 @@
 import { api } from "./api.ts";
 import { ConfigTypes, Envs } from "shared/types/main.ts";
-import { getConfig as $getConfig, getDb } from "@oh/utils";
-import { load as loadUpdater } from "modules/updater/main.ts";
+import { getConfig as $getConfig, getDb, update } from "@oh/utils";
 import { captcha } from "./captcha.ts";
 import { email } from "./email.ts";
 import { otp } from "./otp.ts";
@@ -22,7 +21,17 @@ export const System = (() => {
   const $db = getDb({ pathname: `./database` });
 
   const load = async (envs: Envs) => {
-    if (await loadUpdater(envs)) return;
+    if (
+      envs.version !== "DEVELOPMENT" &&
+      (await update({
+        targetVersion: "latest",
+        version: envs.version,
+        repository: "openhotel/auth",
+        log: console.log,
+        debug: console.debug,
+      }))
+    )
+      return;
 
     $config = await $getConfig<ConfigTypes>({ defaults: CONFIG_DEFAULT });
     $envs = envs;
