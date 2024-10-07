@@ -1,5 +1,5 @@
 import { Envs } from "shared/types/main.ts";
-import { update } from "@oh/updater";
+import { update } from "@oh/utils";
 
 export const load = async (envs: Envs): Promise<boolean> => {
   if (envs.version === "DEVELOPMENT") return false;

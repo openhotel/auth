@@ -1,7 +1,6 @@
 import { api } from "./api.ts";
 import { ConfigTypes, Envs } from "shared/types/main.ts";
-import { getConfig as $getConfig } from "@oh/config";
-import { getDb } from "@oh/db";
+import { getConfig as $getConfig, getDb } from "@oh/utils";
 import { load as loadUpdater } from "modules/updater/main.ts";
 import { captcha } from "./captcha.ts";
 import { email } from "./email.ts";
