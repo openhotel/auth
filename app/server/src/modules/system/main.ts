@@ -18,7 +18,7 @@ export const System = (() => {
   const $otp = otp();
   const $tasks = tasks();
   const $sessions = sessions();
-  const $db = getDb({ pathname: `./database` });
+  let $db;
 
   const load = async (envs: Envs) => {
     if (
@@ -35,6 +35,8 @@ export const System = (() => {
 
     $config = await $getConfig<ConfigTypes>({ defaults: CONFIG_DEFAULT });
     $envs = envs;
+
+    $db = getDb({ pathname: `./${$config.database.filename}` });
 
     $tasks.load();
     await $db.load();
