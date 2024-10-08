@@ -54,7 +54,9 @@ export const System = (() => {
     getConfig,
     getEnvs,
 
-    db: $db,
+    get db() {
+      return $db;
+    },
     api: $api,
     captcha: $captcha,
     email: $email,
