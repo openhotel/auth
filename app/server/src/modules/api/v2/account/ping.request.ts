@@ -40,7 +40,7 @@ export const pingRequest: RequestType = {
     const ip = getIpFromRequest(request);
     const serverIp = await getIpFromUrl(server);
 
-    console.log(
+    console.error(
       serverSession?.ip,
       ip,
       serverSession?.serverId,
