@@ -43,7 +43,8 @@ export const pingRequest: RequestType = {
     console.error(
       serverSession?.ip,
       ip,
-      serverSession?.serverId,
+      server,
+      serverSession?.serverIp,
       serverIp,
       serverSession?.ticketId,
       ticketId,
