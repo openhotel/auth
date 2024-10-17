@@ -40,6 +40,14 @@ export const pingRequest: RequestType = {
     const ip = getIpFromRequest(request);
     const serverIp = await getIpFromUrl(server);
 
+    console.log(
+      serverSession?.ip,
+      ip,
+      serverSession?.serverId,
+      serverIp,
+      serverSession?.ticketId,
+      ticketId,
+    );
     if (
       serverSession?.ip !== ip ||
       !compareIps(serverSession?.serverIp, serverIp) ||
