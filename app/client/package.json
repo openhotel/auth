@@ -23,6 +23,7 @@
   "packageManager": "yarn@1.22.22",
   "scripts": {
     "start": "vite --host",
-    "build": "vite build"
+    "build": "vite build",
+    "link": "yarn link @oh/components"
   }
 }

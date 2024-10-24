@@ -7,9 +7,6 @@
     "start:server:nowatch": "cd ./app/server && deno task start:nowatch",
     "start:client": "cd ./app/client && yarn start",
 
-    "build": "",
-
-    "prettier:check": "prettier -c ./",
-    "prettier:write": "prettier --write ."
+    "build": ""
   }
 }
