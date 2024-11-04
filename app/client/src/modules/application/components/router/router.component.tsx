@@ -25,12 +25,12 @@ const router = createBrowserRouter([
         path: "/login",
       },
       {
+        element: <CardLayoutComponent children={<RegisterComponent />} />,
         path: "/register",
-        Component: () => <RegisterComponent />,
       },
       {
+        element: <CardLayoutComponent children={<VerifyComponent />} />,
         path: "/verify",
-        Component: () => <VerifyComponent />,
       },
       {
         path: "/logout",
