@@ -37,24 +37,7 @@ const router = createBrowserRouter([
         Component: () => <LogoutComponent />,
       },
       {
-        element: (
-          <MainLayoutComponent
-            navigatorChildren={
-              <>
-                <NavItemComponent icon={<HotelIconComponent />}>
-                  Return
-                </NavItemComponent>
-              </>
-            }
-            headerChildren={
-              <>
-                <div style={{ flex: 1 }} />
-                <AccountItemComponent username={"test"} />
-              </>
-            }
-            children={<Outlet />}
-          />
-        ),
+        element: <MainLayoutComponent children={<Outlet />} />,
         path: "/account",
         children: [
           {
