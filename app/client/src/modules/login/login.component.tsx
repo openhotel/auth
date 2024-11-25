@@ -36,7 +36,7 @@ export const LoginComponent: React.FC = () => {
           setErrorMessage(message);
         });
     },
-    [captchaId, navigate, setSubmittedAt, setErrorMessage]
+    [captchaId, navigate, setSubmittedAt, setErrorMessage],
   );
 
   if (isLogged === null) return <div>Loading...</div>;

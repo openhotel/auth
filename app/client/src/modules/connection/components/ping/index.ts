@@ -1,2 +1,1 @@
-
-export * from './ping.component'
+export * from "./ping.component";

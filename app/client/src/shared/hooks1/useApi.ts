@@ -46,16 +46,19 @@ export const useApi = () => {
           Cookies.set("sessionId", data.sessionId, {
             expires: 7,
             sameSite: "strict",
+            secure: true,
           });
           Cookies.set("refreshToken", data.refreshToken, {
             expires: 7,
             sameSite: "strict",
+            secure: true,
           });
           if (data.redirectUrl) setFallbackRedirectUrl(data.redirectUrl);
           else
             Cookies.set("token", data.token, {
               expires: 1,
               sameSite: "strict",
+              secure: true,
             });
           resolve(data);
         })
@@ -87,16 +90,19 @@ export const useApi = () => {
             Cookies.set("sessionId", sessionId, {
               expires: 7,
               sameSite: "strict",
+              secure: true,
             });
             Cookies.set("refreshToken", data.refreshToken, {
               expires: 7,
               sameSite: "strict",
+              secure: true,
             });
             if (data.redirectUrl) setFallbackRedirectUrl(data.redirectUrl);
             else
               Cookies.set("token", data.token, {
                 expires: 1,
                 sameSite: "strict",
+                secure: true,
               });
             return resolve(data);
           }

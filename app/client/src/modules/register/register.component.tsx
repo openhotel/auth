@@ -33,7 +33,7 @@ export const RegisterComponent: React.FC = () => {
           setSubmittedAt(performance.now());
         });
     },
-    [captchaId, navigate]
+    [captchaId, navigate],
   );
 
   if (isLogged) return <RedirectComponent to="/" />;

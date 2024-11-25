@@ -13,7 +13,7 @@ export const adminPostRequest: RequestType = {
         {
           status: 403,
         },
-        { status: 403 }
+        { status: 403 },
       );
 
     const adminList = await System.admins.getList();
@@ -27,7 +27,7 @@ export const adminPostRequest: RequestType = {
         {
           status: 200,
         },
-        { status: 200 }
+        { status: 200 },
       );
     }
 
@@ -36,7 +36,7 @@ export const adminPostRequest: RequestType = {
         {
           status: 403,
         },
-        { status: 403 }
+        { status: 403 },
       );
 
     const accountId = url.searchParams.get("accountId");
@@ -49,7 +49,7 @@ export const adminPostRequest: RequestType = {
         {
           status: 400,
         },
-        { status: 400 }
+        { status: 400 },
       );
 
     await System.admins.set(accountId);
@@ -58,7 +58,7 @@ export const adminPostRequest: RequestType = {
       {
         status: 200,
       },
-      { status: 200 }
+      { status: 200 },
     );
   },
 };
@@ -73,7 +73,7 @@ export const adminDeleteRequest: RequestType = {
         {
           status: 403,
         },
-        { status: 403 }
+        { status: 403 },
       );
 
     const accountId = url.searchParams.get("accountId");
@@ -82,7 +82,7 @@ export const adminDeleteRequest: RequestType = {
         {
           status: 400,
         },
-        { status: 400 }
+        { status: 400 },
       );
 
     await System.admins.remove(accountId);
@@ -91,7 +91,7 @@ export const adminDeleteRequest: RequestType = {
       {
         status: 200,
       },
-      { status: 200 }
+      { status: 200 },
     );
   },
 };

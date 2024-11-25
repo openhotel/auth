@@ -14,7 +14,7 @@ export const bskyPostRequest: RequestType = {
         {
           status: 403,
         },
-        { status: 403 }
+        { status: 403 },
       );
 
     const { did } = await request.json();
@@ -24,7 +24,7 @@ export const bskyPostRequest: RequestType = {
         { status: 403 },
         {
           status: 403,
-        }
+        },
       );
     const account = await System.accounts.getFromRequest(request);
 
@@ -39,7 +39,7 @@ export const bskyPostRequest: RequestType = {
       },
       {
         status: 200,
-      }
+      },
     );
   },
 };

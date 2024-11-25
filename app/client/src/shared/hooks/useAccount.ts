@@ -41,14 +41,17 @@ export const useAccount = () => {
       Cookies.set("account-id", accountId, {
         expires: refreshTokenDuration,
         sameSite: "strict",
+        secure: true,
       });
       Cookies.set("refresh-token", refreshToken, {
         expires: refreshTokenDuration,
         sameSite: "strict",
+        secure: true,
       });
       Cookies.set("token", token, {
         expires: tokenDuration,
         sameSite: "strict",
+        secure: true,
       });
     },
     [fetch],
@@ -99,14 +102,17 @@ export const useAccount = () => {
     Cookies.set("account-id", accountId, {
       expires: refreshTokenDuration,
       sameSite: "strict",
+      secure: true,
     });
     Cookies.set("refresh-token", refreshToken, {
       expires: refreshTokenDuration,
       sameSite: "strict",
+      secure: true,
     });
     Cookies.set("token", token, {
       expires: tokenDuration,
       sameSite: "strict",
+      secure: true,
     });
   }, [fetch]);
 

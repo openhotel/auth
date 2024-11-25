@@ -74,7 +74,7 @@ export const AdminProvider: React.FunctionComponent<ProviderProps> = ({
       ]);
       return token;
     },
-    [fetch, getAccountHeaders, setTokens]
+    [fetch, getAccountHeaders, setTokens],
   );
 
   const removeToken = useCallback(
@@ -86,7 +86,7 @@ export const AdminProvider: React.FunctionComponent<ProviderProps> = ({
       });
       setTokens((tokens) => tokens.filter((token) => token.id !== id));
     },
-    [fetch, getAccountHeaders, setTokens]
+    [fetch, getAccountHeaders, setTokens],
   );
 
   const fetchHotels = useCallback(async () => {

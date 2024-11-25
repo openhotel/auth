@@ -1,2 +1,1 @@
-
-export * from './otp.component'
+export * from "./otp.component";

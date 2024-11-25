@@ -1,16 +1,14 @@
-
 .users {
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 
-    .list {
-        display: flex;
-        flex-direction: column;
-        gap: .5rem;
-
-        .item {
-            display: flex;
-            gap: 1rem;
-            background-color: var(--bg);
-            padding: 1rem 2rem;
-        }
+    .item {
+      display: flex;
+      gap: 1rem;
+      background-color: var(--bg);
+      padding: 1rem 2rem;
     }
+  }
 }
