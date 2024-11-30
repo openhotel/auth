@@ -43,21 +43,41 @@ export const LoginComponent: React.FC = () => {
   if (isLogged) return <RedirectComponent to="/" />;
 
   return (
-    <div>
+    <div className={styles.wrapper}>
       <form className={styles.form} onSubmit={onSubmit}>
-        <input name="email" placeholder="email" />
-        <input name="password" placeholder="password" type="password" />
+        <h1 className={styles.title}>Login</h1>
+        <input className={styles.input} name="email" placeholder="Email" />
+        <input
+          className={styles.input}
+          name="password"
+          placeholder="Password"
+          type="password"
+        />
+
         {showCaptcha && (
           <CaptchaComponent
             submittedAt={submittedAt}
             onResolve={setCaptchaId}
           />
         )}
-        {showOTP && <input name="otpToken" placeholder="otp" maxLength={6} />}
-        <button type="submit">Login</button>
-        {errorMessage ? <label>{errorMessage}</label> : null}
+        {showOTP && (
+          <input
+            className={styles.input}
+            name="otpToken"
+            placeholder="One Time Password"
+            maxLength={6}
+          />
+        )}
+        <button className={styles.button} type="submit">
+          Login
+        </button>
+        {errorMessage ? (
+          <label className={styles.error}>{errorMessage}</label>
+        ) : null}
       </form>
-      <LinkComponent to="/register">/register</LinkComponent>
+      <LinkComponent className={styles.link} to="/register">
+        No account? Register here.
+      </LinkComponent>
     </div>
   );
 };

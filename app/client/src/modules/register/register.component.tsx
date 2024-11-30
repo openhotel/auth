@@ -6,6 +6,7 @@ import {
 } from "shared/components";
 import { useAccount } from "shared/hooks";
 import styles from "./register.module.scss";
+import login_styles from "../login/login.module.scss";
 import { useNavigate } from "react-router-dom";
 
 export const RegisterComponent: React.FC = () => {
@@ -39,20 +40,39 @@ export const RegisterComponent: React.FC = () => {
   if (isLogged) return <RedirectComponent to="/" />;
 
   return (
-    <div>
-      <form className={styles.form} onSubmit={onSubmit}>
-        <input name="email" placeholder="email" />
-        <input name="username" placeholder="username" />
-        <input name="password" placeholder="password" type="password" />
+    <div className={login_styles.wrapper}>
+      <form className={login_styles.form} onSubmit={onSubmit}>
+        <h1 className={login_styles.title}>Register</h1>
         <input
+          className={login_styles.input}
+          name="email"
+          placeholder="Email"
+        />
+        <input
+          className={login_styles.input}
+          name="username"
+          placeholder="Username"
+        />
+        <input
+          className={login_styles.input}
+          name="password"
+          placeholder="Password"
+          type="password"
+        />
+        <input
+          className={login_styles.input}
           name="rePassword"
           placeholder="Repeat password"
           type="password"
         />
         <CaptchaComponent submittedAt={submittedAt} onResolve={setCaptchaId} />
-        <button type="submit">Register</button>
+        <button className={login_styles.button} type="submit">
+          Register
+        </button>
       </form>
-      <LinkComponent to="/login">/login</LinkComponent>
+      <LinkComponent className={login_styles.link} to="/login">
+        Already registered? Login here.
+      </LinkComponent>
     </div>
   );
 };
