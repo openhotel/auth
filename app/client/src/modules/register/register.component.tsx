@@ -8,6 +8,7 @@ import { useAccount } from "shared/hooks";
 import styles from "./register.module.scss";
 import login_styles from "../login/login.module.scss";
 import { useNavigate } from "react-router-dom";
+import { ButtonComponent, InputComponent } from "@oh/components";
 
 export const RegisterComponent: React.FC = () => {
   const [submittedAt, setSubmittedAt] = useState<number>();
@@ -47,32 +48,20 @@ export const RegisterComponent: React.FC = () => {
     <div className={login_styles.wrapper}>
       <form className={login_styles.form} onSubmit={onSubmit}>
         <h1 className={login_styles.title}>Register</h1>
-        <input
-          className={login_styles.input}
-          name="email"
-          placeholder="Email"
-        />
-        <input
-          className={login_styles.input}
-          name="username"
-          placeholder="Username"
-        />
-        <input
-          className={login_styles.input}
+        <InputComponent name="email" placeholder="Email" />
+        <InputComponent name="username" placeholder="Username" />
+        <InputComponent
           name="password"
           placeholder="Password"
           type="password"
         />
-        <input
-          className={login_styles.input}
+        <InputComponent
           name="rePassword"
           placeholder="Repeat password"
           type="password"
         />
         <CaptchaComponent submittedAt={submittedAt} onResolve={setCaptchaId} />
-        <button className={login_styles.button} type="submit">
-          Register
-        </button>
+        <ButtonComponent fullWidth>Register</ButtonComponent>
         {errorMessage ? (
           <label className={login_styles.error}>{errorMessage}</label>
         ) : null}

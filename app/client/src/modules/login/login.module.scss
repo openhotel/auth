@@ -19,33 +19,9 @@
     margin-bottom: 0.15rem;
   }
 
-  .input {
-    padding: 0 2rem;
-    height: 4rem;
-    border-radius: var(--border-radius-xl);
-    outline: none;
-    font-size: 1.6rem;
-
-    &:focus {
-      box-shadow: 0 0 rem(5) inset var(--color-input-shadow-focus);
-      outline: rem(2) solid var(--color-input-border-focus);
-    }
-  }
-
-  .button {
-    padding: 0 2rem;
-    height: 4rem;
-    background: var(--color-button-bg-primary);
-    color: var(--color-button-text-primary);
-    font-weight: bold;
-    font-size: 1.5rem;
-    border-radius: 1rem;
-    cursor: pointer;
-  }
-
   .error {
     display: block;
-    color: var(--color-text-error-primary);
+    color: var(--text-danger);
   }
 }
 

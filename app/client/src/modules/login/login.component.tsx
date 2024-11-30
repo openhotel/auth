@@ -7,6 +7,7 @@ import {
 import { useAccount } from "shared/hooks";
 import styles from "./login.module.scss";
 import { useNavigate } from "react-router-dom";
+import { ButtonComponent, InputComponent } from "@oh/components";
 
 export const LoginComponent: React.FC = () => {
   const [submittedAt, setSubmittedAt] = useState<number>();
@@ -48,9 +49,8 @@ export const LoginComponent: React.FC = () => {
     <div className={styles.wrapper}>
       <form className={styles.form} onSubmit={onSubmit}>
         <h1 className={styles.title}>Login</h1>
-        <input className={styles.input} name="email" placeholder="Email" />
-        <input
-          className={styles.input}
+        <InputComponent name="email" placeholder="Email" />
+        <InputComponent
           name="password"
           placeholder="Password"
           type="password"
@@ -63,16 +63,13 @@ export const LoginComponent: React.FC = () => {
           />
         )}
         {showOTP && (
-          <input
-            className={styles.input}
+          <InputComponent
             name="otpToken"
             placeholder="One Time Password"
             maxLength={6}
           />
         )}
-        <button className={styles.button} type="submit">
-          Login
-        </button>
+        <ButtonComponent fullWidth={true}>Login</ButtonComponent>
         {errorMessage ? (
           <label className={styles.error}>{errorMessage}</label>
         ) : null}

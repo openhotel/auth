@@ -2,16 +2,4 @@
 
 #root {
   height: 100%;
-
-  --color-input-shadow-focus: #54aaff;
-  --color-input-border-focus: #54aaff;
-
-  --color-button-text-primary: var(--text-primary);
-  --color-button-bg-primary: #00994d;
-
-  --color-text-error-primary: #ff5252;
-
-  --border-radius: #{rem(3)};
-  --border-radius-lg: #{rem(6)};
-  --border-radius-xl: #{rem(16)};
 }
