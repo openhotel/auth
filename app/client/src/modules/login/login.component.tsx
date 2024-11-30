@@ -34,6 +34,8 @@ export const LoginComponent: React.FC = () => {
           if (status === 461 || status === 441) setShowOTP(true);
           setSubmittedAt(performance.now());
           setErrorMessage(message);
+          if (status === 500)
+            setErrorMessage("Internal server error: " + message);
         });
     },
     [captchaId, navigate, setSubmittedAt, setErrorMessage],

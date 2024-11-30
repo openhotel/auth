@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 
 export const RegisterComponent: React.FC = () => {
   const [submittedAt, setSubmittedAt] = useState<number>();
+  const [errorMessage, setErrorMessage] = useState<string>();
   const [captchaId, setCaptchaId] = useState<string>();
 
   const { register, isLogged } = useAccount();
@@ -30,8 +31,11 @@ export const RegisterComponent: React.FC = () => {
         .then(() => {
           navigate("/login");
         })
-        .catch(() => {
+        .catch(({ status, message }) => {
           setSubmittedAt(performance.now());
+          setErrorMessage(message);
+          if (status === 500)
+            setErrorMessage("Internal server error: " + message);
         });
     },
     [captchaId, navigate],
@@ -69,6 +73,9 @@ export const RegisterComponent: React.FC = () => {
         <button className={login_styles.button} type="submit">
           Register
         </button>
+        {errorMessage ? (
+          <label className={login_styles.error}>{errorMessage}</label>
+        ) : null}
       </form>
       <LinkComponent className={login_styles.link} to="/login">
         Already registered? Login here.
