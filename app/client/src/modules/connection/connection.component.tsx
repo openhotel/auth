@@ -18,12 +18,15 @@ export const ConnectionComponent: React.FC = () => {
   const state = searchParams.get("state");
   const redirectUrl = searchParams.get("redirectUrl");
   const scopes = searchParams.get("scopes")?.split(",") || [];
+  const meta = searchParams.get("meta");
 
   const onAddHost = useCallback(() => {
     add(state, redirectUrl, scopes).then(({ data: { redirectUrl } }) => {
-      window.location.href = redirectUrl;
+      const composedRedirectUrl = new URL(redirectUrl);
+      if (meta) composedRedirectUrl.searchParams.append("meta", meta);
+      window.location.replace(composedRedirectUrl);
     });
-  }, [add, state, redirectUrl, scopes]);
+  }, [add, state, redirectUrl, scopes, meta]);
 
   if (!state || !redirectUrl) return <RedirectComponent to="/" />;
 

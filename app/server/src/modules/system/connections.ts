@@ -93,12 +93,16 @@ export const connections = () => {
         createdAt: Date.now(),
       });
 
+    const composedRedirectUrl = new URL(redirectUrl);
+    composedRedirectUrl.searchParams.append("state", state);
+    composedRedirectUrl.searchParams.append("token", token);
+    if (scopes.length)
+      composedRedirectUrl.searchParams.append("scopes", scopes.join(","));
+
     return {
       connectionId,
       token,
-      redirectUrl:
-        redirectUrl +
-        `?state=${state}&token=${token}${scopes?.length ? `&scopes=${scopes.join(",")}` : ""}`,
+      redirectUrl: composedRedirectUrl.href,
     };
   };
 
