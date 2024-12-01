@@ -18,7 +18,12 @@ Basic example with `OHAP` [/auth-example](https://github.com/openhotel/auth-exam
 - Install `deno >= 1.44`
 - Install `node >= 20`
 - Install `yarn`
--
+
+### Setup
+
+- Install deps with `yarn install`
+- Install deps with `yarn install` at `app/client`
+- Edit `app/server/config.yml` and set version to `development`
 
 ### Start project
 
