@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { RedirectComponent } from "shared/components";
 import { useAccount, useConnection, useHotel, useRedirect } from "shared/hooks";
-import { FullConnection, PartialConnection } from "shared/types";
+import { PartialConnection } from "shared/types";
 import { arraysMatch } from "shared/utils";
 import { ButtonComponent } from "@oh/components";
 
@@ -23,11 +23,14 @@ export const ConnectionComponent: React.FC = () => {
   const hotelId = searchParams.get("hotelId");
   const integrationId = searchParams.get("integrationId");
   const scopes = searchParams.get("scopes")?.split(",") || [];
+  const meta = searchParams.get("meta");
 
   const onAddHost = useCallback(() => {
     add(hotelId, integrationId, state, scopes).then(
       ({ data: { redirectUrl } }) => {
-        window.location.href = redirectUrl;
+				const composedRedirectUrl = new URL(redirectUrl);
+				if (meta) composedRedirectUrl.searchParams.append("meta", meta);
+				window.location.replace(composedRedirectUrl);
       },
     );
   }, [add, hotelId, integrationId, state, scopes]);
