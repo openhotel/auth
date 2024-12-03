@@ -27,4 +27,5 @@ Basic example with `OHAP` [/auth-example](https://github.com/openhotel/auth-exam
 
 ### Start project
 
+- Run `deno task install`
 - Run `deno task start`
