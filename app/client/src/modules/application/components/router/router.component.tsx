@@ -6,7 +6,11 @@ import { RegisterComponent } from "modules/register";
 import { HomeComponent } from "modules/home";
 import { RedirectComponent } from "shared/components";
 import { LogoutComponent } from "modules/logout";
-import { MainLayoutComponent, CardLayoutComponent } from "@oh/components";
+import {
+  MainLayoutComponent,
+  CardLayoutComponent,
+  BoxComponent,
+} from "@oh/components";
 import { ConnectionComponent, PingComponent } from "modules/connection";
 import { AdminComponent } from "modules/admin";
 import { HomeNavigatorComponent } from "modules/home/components";
@@ -16,11 +20,23 @@ const router = createBrowserRouter([
     path: "/",
     children: [
       {
-        element: <CardLayoutComponent children={<LoginComponent />} />,
+        element: (
+          <CardLayoutComponent
+            mih="30rem"
+            label={<BoxComponent fz="xl">Login</BoxComponent>}
+            children={<LoginComponent />}
+          />
+        ),
         path: "/login",
       },
       {
-        element: <CardLayoutComponent children={<RegisterComponent />} />,
+        element: (
+          <CardLayoutComponent
+            mih="30rem"
+            label={<BoxComponent fz="xl">Register</BoxComponent>}
+            children={<RegisterComponent />}
+          />
+        ),
         path: "/register",
       },
       // {

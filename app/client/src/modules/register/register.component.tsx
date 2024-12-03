@@ -53,7 +53,6 @@ export const RegisterComponent: React.FC = () => {
   return (
     <div className={login_styles.wrapper}>
       <form className={login_styles.form} onSubmit={onSubmit}>
-        <h1 className={login_styles.title}>Register</h1>
         <EmailComponent />
         <UsernameComponent />
         <PasswordComponent />

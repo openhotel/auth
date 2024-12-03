@@ -48,7 +48,6 @@ export const LoginComponent: React.FC = () => {
   return (
     <div className={styles.wrapper}>
       <form className={styles.form} onSubmit={onSubmit}>
-        <h1 className={styles.title}>Login</h1>
         <InputComponent name="email" placeholder="Email" />
         <InputComponent
           name="password"
