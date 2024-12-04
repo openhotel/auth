@@ -12,6 +12,13 @@
   flex-direction: column;
   gap: 1rem;
 
+  .title {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 2.2rem;
+  }
+
   .error {
     display: block;
     color: var(--text-danger);
@@ -24,4 +31,5 @@
   display: block;
   margin-top: auto;
   padding-top: 2rem;
+  text-align: center;
 }

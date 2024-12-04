@@ -1,4 +1,4 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import React from "react";
 import { NotFoundComponent } from "../not-found";
 import { LoginComponent } from "modules/login";
@@ -6,11 +6,7 @@ import { RegisterComponent } from "modules/register";
 import { HomeComponent } from "modules/home";
 import { RedirectComponent } from "shared/components";
 import { LogoutComponent } from "modules/logout";
-import {
-  MainLayoutComponent,
-  CardLayoutComponent,
-  BoxComponent,
-} from "@oh/components";
+import { CardLayoutComponent, MainLayoutComponent } from "@oh/components";
 import { ConnectionComponent, PingComponent } from "modules/connection";
 import { AdminComponent } from "modules/admin";
 import { HomeNavigatorComponent } from "modules/home/components";
@@ -21,21 +17,13 @@ const router = createBrowserRouter([
     children: [
       {
         element: (
-          <CardLayoutComponent
-            mih="30rem"
-            label={<BoxComponent fz="xl">Login</BoxComponent>}
-            children={<LoginComponent />}
-          />
+          <CardLayoutComponent mih="20rem" children={<LoginComponent />} />
         ),
         path: "/login",
       },
       {
         element: (
-          <CardLayoutComponent
-            mih="30rem"
-            label={<BoxComponent fz="xl">Register</BoxComponent>}
-            children={<RegisterComponent />}
-          />
+          <CardLayoutComponent mih="30rem" children={<RegisterComponent />} />
         ),
         path: "/register",
       },
