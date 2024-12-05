@@ -1,9 +1,9 @@
-export const USERNAME_REGEX = /^[a-zA-Z0-9_]{3,16}$/;
+export const USERNAME_MIN_LEN = 3;
+export const USERNAME_MAX_LEN = 16;
 
-// Passwords should be at least 8 characters long, allow any character and "There should be no requirement for
-// upper or lower case or numbers or special characters."
-// https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html#implement-proper-password-strength-controls
-export const PASSWORD_REGEX = /^.{8,}$/;
+export const USERNAME_VALID_CHARS = /^[a-zA-Z0-9_]+$/;
+
+export const PASSWORD_MIN_LEN = 8;
 
 // Regex is not the appropriate way to validate email addresses, but anyway...
 // https://stackoverflow.com/a/201378
