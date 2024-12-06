@@ -8,16 +8,20 @@
     padding: 2rem 3rem;
     border-radius: 1rem;
   }
+}
 
-  .sublist {
+.actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .inputs {
     display: flex;
-    flex-direction: column;
     gap: 1rem;
-
-    .connection {
-      background-color: var(--text-3-bg);
-      padding: 2rem 3rem;
-      border-radius: 1rem;
-    }
   }
 }
