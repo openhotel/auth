@@ -10,6 +10,8 @@ import { CardLayoutComponent, MainLayoutComponent } from "@oh/components";
 import { ConnectionComponent, PingComponent } from "modules/connection";
 import { AdminComponent } from "modules/admin";
 import { HomeNavigatorComponent } from "modules/home/components";
+import { RecoverPassComponent } from "modules/recover-pass";
+import { ChangePassComponent } from "../../../change-pass";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +22,21 @@ const router = createBrowserRouter([
           <CardLayoutComponent mih="20rem" children={<LoginComponent />} />
         ),
         path: "/login",
+      },
+      {
+        element: (
+          <CardLayoutComponent
+            mih="20rem"
+            children={<RecoverPassComponent />}
+          />
+        ),
+        path: "/recover-pass",
+      },
+      {
+        element: (
+          <CardLayoutComponent mih="20rem" children={<ChangePassComponent />} />
+        ),
+        path: "/change-pass",
       },
       {
         element: (
