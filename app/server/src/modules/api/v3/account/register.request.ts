@@ -13,6 +13,7 @@ import {
   USERNAME_REGEX,
 } from "shared/consts/main.ts";
 import { RequestKind } from "shared/enums/request.enums.ts";
+import { pepperPassword } from "shared/utils/pepper.utils.ts";
 
 export const registerPostRequest: RequestType = {
   method: RequestMethod.POST,
@@ -75,6 +76,11 @@ export const registerPostRequest: RequestType = {
     } = System.getConfig();
     const expireIn = accountWithoutVerificationDays * 24 * 60 * 60 * 1000;
 
+    const passWithPepper = await pepperPassword(password);
+    const passWithSalt = bcrypt.hashSync(passWithPepper, bcrypt.genSaltSync(8));
+    // We add a prefix, so old passwords without pepper can be detected
+    const passwordHash = "P." + passWithSalt;
+
     // Every key related to the account is temporary until the account is verified or freed if not
     await System.db.set(
       ["accounts", accountId],
@@ -82,7 +88,7 @@ export const registerPostRequest: RequestType = {
         accountId,
         username,
         email,
-        passwordHash: bcrypt.hashSync(password, bcrypt.genSaltSync(8)),
+        passwordHash,
         createdAt: Date.now(),
         verified: !isEmailVerificationEnabled,
       },
