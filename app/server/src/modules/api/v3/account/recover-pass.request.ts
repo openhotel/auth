@@ -1,4 +1,9 @@
-import { RequestType, RequestMethod, getRandomString } from "@oh/utils";
+import {
+  RequestType,
+  RequestMethod,
+  getRandomString,
+  HttpStatusCode,
+} from "@oh/utils";
 import { System } from "modules/system/main.ts";
 import * as bcrypt from "@da/bcrypt";
 import {
@@ -17,9 +22,9 @@ export const recoverPassPostRequest: RequestType = {
 
     if (!email || !new RegExp(EMAIL_REGEX).test(email)) {
       return Response.json(
-        { status: 400, message: "Invalid email" },
+        { status: HttpStatusCode.BAD_REQUEST, message: "Invalid email" },
         {
-          status: 400,
+          status: HttpStatusCode.BAD_REQUEST,
         },
       );
     }
@@ -29,15 +34,21 @@ export const recoverPassPostRequest: RequestType = {
     if (!accountId) {
       // Don't tell the client if the email exists or not, to prevent email enumeration
       console.warn("Recover password request for non-existent email:", email);
-      return Response.json({ status: 200 }, { status: 200 });
+      return Response.json(
+        { status: HttpStatusCode.OK },
+        { status: HttpStatusCode.OK },
+      );
     }
 
     const isEmailEnabled = System.getConfig().email.enabled;
 
     if (!isEmailEnabled) {
       return Response.json(
-        { status: 500, message: "Disabled: cannot send email" },
-        { status: 500 },
+        {
+          status: HttpStatusCode.FORBIDDEN,
+          message: "Disabled: cannot send email",
+        },
+        { status: HttpStatusCode.FORBIDDEN },
       );
     }
 
@@ -66,12 +77,8 @@ export const recoverPassPostRequest: RequestType = {
     );
 
     return Response.json(
-      {
-        status: 200,
-      },
-      {
-        status: 200,
-      },
+      { status: HttpStatusCode.OK },
+      { status: HttpStatusCode.OK },
     );
   },
 };

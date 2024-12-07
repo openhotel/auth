@@ -1,4 +1,9 @@
-import { RequestType, RequestMethod, getRandomString } from "@oh/utils";
+import {
+  RequestType,
+  RequestMethod,
+  getRandomString,
+  HttpStatusCode,
+} from "@oh/utils";
 import { System } from "modules/system/main.ts";
 import * as bcrypt from "@da/bcrypt";
 import {
@@ -18,18 +23,21 @@ export const changePassPostRequest: RequestType = {
 
     if (!password || !rePassword || !token) {
       return Response.json(
-        { status: 400, message: "Some input is missing" },
         {
-          status: 400,
+          status: HttpStatusCode.BAD_REQUEST,
+          message: "Some input is missing",
+        },
+        {
+          status: HttpStatusCode.BAD_REQUEST,
         },
       );
     }
 
     if (!new RegExp(PASSWORD_REGEX).test(password) || password !== rePassword) {
       return Response.json(
-        { status: 400, message: "Invalid password" },
+        { status: HttpStatusCode.BAD_REQUEST, message: "Invalid password" },
         {
-          status: 400,
+          status: HttpStatusCode.BAD_REQUEST,
         },
       );
     }
@@ -39,11 +47,11 @@ export const changePassPostRequest: RequestType = {
     if (!recoverRequest) {
       return Response.json(
         {
-          status: 400,
+          status: HttpStatusCode.BAD_REQUEST,
           message:
             "Recover password request has expired, please send a new one",
         },
-        { status: 400 },
+        { status: HttpStatusCode.BAD_REQUEST },
       );
     }
 
@@ -55,10 +63,10 @@ export const changePassPostRequest: RequestType = {
     if (!account) {
       return Response.json(
         {
-          status: 404,
+          status: HttpStatusCode.NOT_FOUND,
           message: "Account is gone",
         },
-        { status: 404 },
+        { status: HttpStatusCode.NOT_FOUND },
       );
     }
 
@@ -70,10 +78,10 @@ export const changePassPostRequest: RequestType = {
 
     return Response.json(
       {
-        status: 200,
+        status: HttpStatusCode.OK,
       },
       {
-        status: 200,
+        status: HttpStatusCode.OK,
       },
     );
   },
