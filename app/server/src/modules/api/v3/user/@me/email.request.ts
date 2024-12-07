@@ -22,7 +22,7 @@ export const emailGetRequest: RequestType = {
 
     return getResponse(HttpStatusCode.OK, {
       data: {
-        email
+        email,
       },
     });
   },
