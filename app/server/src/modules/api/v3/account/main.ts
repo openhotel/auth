@@ -7,6 +7,8 @@ import { refreshGetRequest } from "./refresh.request.ts";
 import { logoutPostRequest } from "./logout.request.ts";
 import { otpRequestList } from "./otp/main.ts";
 import { miscRequestList } from "./misc/main.ts";
+import { recoverPassPostRequest } from "./recover-pass.request.ts";
+import { changePassPostRequest } from "./change-pass.request.ts";
 
 export const accountRequestList: RequestType[] = getPathRequestList({
   requestList: [
@@ -15,6 +17,8 @@ export const accountRequestList: RequestType[] = getPathRequestList({
     verifyGetRequest,
     refreshGetRequest,
     logoutPostRequest,
+    recoverPassPostRequest,
+    changePassPostRequest,
 
     ...otpRequestList,
     ...miscRequestList,
