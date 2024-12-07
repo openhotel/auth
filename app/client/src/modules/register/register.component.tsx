@@ -119,7 +119,7 @@ const UsernameComponent: React.FC = () => {
     }
     setTooShort(username.length < USERNAME_MIN_LEN);
     setTooLong(username.length > USERNAME_MAX_LEN);
-    console.log(username, new RegExp(USERNAME_VALID_CHARS).test(username));
+
     setInvalidChars(!new RegExp(USERNAME_VALID_CHARS).test(username));
   };
 
