@@ -2,6 +2,7 @@ import { RequestType, RequestMethod } from "@oh/utils";
 import { System } from "modules/system/main.ts";
 import { hasRequestAccess } from "shared/utils/scope.utils.ts";
 import { RequestKind } from "shared/enums/request.enums.ts";
+import { getDecryptedEmail } from "shared/utils/account.utils.ts";
 
 export const getRequest: RequestType = {
   method: RequestMethod.GET,
@@ -27,7 +28,8 @@ export const getRequest: RequestType = {
         },
       );
 
-    const uri = await System.otp.generateOTP(account.accountId, account.email);
+    const email = await getDecryptedEmail(account.email);
+    const uri = await System.otp.generateOTP(account.accountId, email);
     return Response.json(
       {
         status: 200,

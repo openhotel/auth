@@ -7,6 +7,7 @@ import {
   USERNAME_REGEX,
 } from "shared/consts/main.ts";
 import { RequestKind } from "shared/enums/request.enums.ts";
+import { getEncryptedEmail } from "shared/utils/account.utils.ts";
 
 export const registerPostRequest: RequestType = {
   method: RequestMethod.POST,
@@ -47,7 +48,13 @@ export const registerPostRequest: RequestType = {
       "accountsByUsername",
       username.toLowerCase(),
     ]);
-    const accountByEmail = await System.db.get(["accountsByEmail", email]);
+
+    const encryptedEmail = await getEncryptedEmail(email);
+
+    const accountByEmail = await System.db.get([
+      "accountsByEmail",
+      encryptedEmail,
+    ]);
 
     if (accountByUsername || accountByEmail)
       return Response.json(
@@ -84,7 +91,7 @@ export const registerPostRequest: RequestType = {
       {
         accountId,
         username,
-        email,
+        email: encryptedEmail,
         passwordHash: bcrypt.hashSync(password, bcrypt.genSaltSync(8)),
         createdAt: Date.now(),
         verified: !isEmailVerificationEnabled,
@@ -104,7 +111,7 @@ export const registerPostRequest: RequestType = {
       },
     );
     await System.db.set(
-      ["accountsByEmail", email],
+      ["accountsByEmail", encryptedEmail],
       accountId,
       isEmailVerificationEnabled
         ? {
