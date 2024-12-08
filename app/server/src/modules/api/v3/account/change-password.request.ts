@@ -10,9 +10,9 @@ import { PASSWORD_REGEX } from "shared/consts/main.ts";
 import { RequestKind } from "shared/enums/request.enums.ts";
 import { Account } from "shared/types/account.types.ts";
 
-export const changePassPostRequest: RequestType = {
+export const changePasswordPostRequest: RequestType = {
   method: RequestMethod.POST,
-  pathname: "/change-pass",
+  pathname: "/change-password",
   kind: RequestKind.PUBLIC,
   func: async (request, url) => {
     const { password, rePassword, token } = await request.json();

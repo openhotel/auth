@@ -1,52 +1,47 @@
 import React, { FormEvent, useCallback, useState } from "react";
 import styles from "../login/login.module.scss";
 import { ButtonComponent, InputComponent } from "@oh/components";
-import {
-  CaptchaComponent,
-  LinkComponent,
-  RedirectComponent,
-} from "../../shared/components";
+import { LinkComponent } from "../../shared/components";
 import { useAccount } from "../../shared/hooks";
-import { PasswordComponent } from "../register";
-import { useNavigate } from "react-router-dom";
 
-export const ChangePassComponent: React.FC = () => {
+export const RecoverPasswordComponent: React.FC = () => {
+  const [statusMessage, setStatusMessage] = useState<string>();
   const [errorMessage, setErrorMessage] = useState<string>();
 
-  const { changePass } = useAccount();
-  const navigate = useNavigate();
-
-  // Change pass auth token
-  const token = new URLSearchParams(window.location.search).get("token");
+  const { recoverPassword } = useAccount();
 
   const onSubmit = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
 
       const data = new FormData(event.target as unknown as HTMLFormElement);
-      const password = data.get("password") as string;
-      const rePassword = data.get("rePassword") as string;
+      const email = data.get("email") as string;
 
-      changePass({ token, password, rePassword })
-        .then(() => navigate("/login"))
+      recoverPassword({ email })
+        .then(() => {
+          setStatusMessage("Email sent");
+          setErrorMessage("");
+        })
         .catch(({ status, message }) => {
+          setStatusMessage("");
           setErrorMessage(message);
           if (status === 500)
             setErrorMessage("Internal server error: " + message);
         });
     },
-    [navigate, setErrorMessage],
+    [setStatusMessage, setErrorMessage],
   );
-
-  if (!token) return <RedirectComponent to="/" />;
 
   return (
     <div className={styles.wrapper}>
       <form className={styles.form} onSubmit={onSubmit}>
-        <h1 className={styles.title}>Change password</h1>
-        <PasswordComponent />
+        <h1 className={styles.title}>Recover password</h1>
+        <InputComponent name="email" placeholder="Email" />
 
-        <ButtonComponent fullWidth={true}>Change</ButtonComponent>
+        <ButtonComponent fullWidth={true}>Recover</ButtonComponent>
+        {statusMessage ? (
+          <label className={styles.status}>{statusMessage}</label>
+        ) : null}
         {errorMessage ? (
           <label className={styles.error}>{errorMessage}</label>
         ) : null}

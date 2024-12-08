@@ -80,7 +80,7 @@ export const LoginComponent: React.FC = () => {
         No account? Register here.
       </LinkComponent>
 
-      <LinkComponent className={styles.recoverPass} to="/recover-pass">
+      <LinkComponent className={styles.recoverPass} to="/recover-password">
         Forgot your password? Click here.
       </LinkComponent>
     </div>

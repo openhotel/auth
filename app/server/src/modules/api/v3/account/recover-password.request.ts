@@ -9,9 +9,9 @@ import { System } from "modules/system/main.ts";
 import { EMAIL_REGEX } from "shared/consts/main.ts";
 import { RequestKind } from "shared/enums/request.enums.ts";
 
-export const recoverPassPostRequest: RequestType = {
+export const recoverPasswordPostRequest: RequestType = {
   method: RequestMethod.POST,
-  pathname: "/recover-pass",
+  pathname: "/recover-password",
   kind: RequestKind.PUBLIC,
   func: async (request, url) => {
     const { email } = await request.json();
@@ -41,7 +41,7 @@ export const recoverPassPostRequest: RequestType = {
     const verifyToken = getRandomString(16);
     const { url: rootUrl } = System.getConfig();
 
-    const verifyUrl = `${rootUrl}/change-pass?token=${verifyToken}`;
+    const verifyUrl = `${rootUrl}/change-password?token=${verifyToken}`;
 
     console.debug("Sending email to", email, "with url", verifyUrl);
     System.email.send(

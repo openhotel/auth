@@ -86,21 +86,21 @@ export const useAccount = () => {
     Cookies.remove("token");
   }, [fetch, getAccountHeaders]);
 
-  const recoverPass = useCallback(
+  const recoverPassword = useCallback(
     async (body: AccountRecoverPassProps) =>
       fetch({
         method: RequestMethod.POST,
-        pathname: "/account/recover-pass",
+        pathname: "/account/recover-password",
         body,
       }),
     [fetch],
   );
 
-  const changePass = useCallback(
+  const changePassword = useCallback(
     async (body: AccountChangePassProps) =>
       fetch({
         method: RequestMethod.POST,
-        pathname: "/account/change-pass",
+        pathname: "/account/change-password",
         body,
       }),
     [fetch],
@@ -170,8 +170,8 @@ export const useAccount = () => {
     register,
     logout,
     verify,
-    recoverPass,
-    changePass,
+    recoverPassword,
+    changePassword,
 
     refresh,
 
