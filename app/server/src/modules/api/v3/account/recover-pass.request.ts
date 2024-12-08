@@ -2,15 +2,11 @@ import {
   RequestType,
   RequestMethod,
   getRandomString,
+  getResponse,
   HttpStatusCode,
 } from "@oh/utils";
 import { System } from "modules/system/main.ts";
-import * as bcrypt from "@da/bcrypt";
-import {
-  PASSWORD_REGEX,
-  EMAIL_REGEX,
-  USERNAME_REGEX,
-} from "shared/consts/main.ts";
+import { EMAIL_REGEX } from "shared/consts/main.ts";
 import { RequestKind } from "shared/enums/request.enums.ts";
 
 export const recoverPassPostRequest: RequestType = {
@@ -21,12 +17,9 @@ export const recoverPassPostRequest: RequestType = {
     const { email } = await request.json();
 
     if (!email || !new RegExp(EMAIL_REGEX).test(email)) {
-      return Response.json(
-        { status: HttpStatusCode.BAD_REQUEST, message: "Invalid email" },
-        {
-          status: HttpStatusCode.BAD_REQUEST,
-        },
-      );
+      return getResponse(HttpStatusCode.BAD_REQUEST, {
+        message: "Invalid email",
+      });
     }
 
     const accountId = await System.db.get(["accountsByEmail", email]);
@@ -34,22 +27,15 @@ export const recoverPassPostRequest: RequestType = {
     if (!accountId) {
       // Don't tell the client if the email exists or not, to prevent email enumeration
       console.warn("Recover password request for non-existent email:", email);
-      return Response.json(
-        { status: HttpStatusCode.OK },
-        { status: HttpStatusCode.OK },
-      );
+      return getResponse(HttpStatusCode.OK);
     }
 
     const isEmailEnabled = System.getConfig().email.enabled;
 
     if (!isEmailEnabled) {
-      return Response.json(
-        {
-          status: HttpStatusCode.FORBIDDEN,
-          message: "Disabled: cannot send email",
-        },
-        { status: HttpStatusCode.FORBIDDEN },
-      );
+      return getResponse(HttpStatusCode.FORBIDDEN, {
+        message: "Disabled: cannot send email",
+      });
     }
 
     const verifyToken = getRandomString(16);
@@ -76,9 +62,6 @@ export const recoverPassPostRequest: RequestType = {
       { expireIn: 60 * 60 * 1000 /* 1h */ },
     );
 
-    return Response.json(
-      { status: HttpStatusCode.OK },
-      { status: HttpStatusCode.OK },
-    );
+    return getResponse(HttpStatusCode.OK);
   },
 };
