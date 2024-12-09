@@ -1,5 +1,18 @@
 // import { System } from "modules/system/main.ts";
 // import * as bcrypt from "@da/bcrypt";
+import { encrypt, decrypt } from "@oh/utils";
+
+export const getEncryptedEmail = async (email: string): Promise<string> => {
+  const DB_SECRET_KEY = Deno.env.get("DB_SECRET_KEY") ?? "";
+  return await encrypt(email, DB_SECRET_KEY);
+};
+
+export const getDecryptedEmail = async (
+  encryptedEmail: string,
+): Promise<string> => {
+  const DB_SECRET_KEY = Deno.env.get("DB_SECRET_KEY") ?? "";
+  return await decrypt(encryptedEmail, DB_SECRET_KEY);
+};
 
 // export const getAccountFromRequest = async ({ headers }: Request) => {
 //   const sessionId = headers.get("sessionId");
