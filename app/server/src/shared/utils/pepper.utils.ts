@@ -1,4 +1,4 @@
-const PEPPER_FILE = ".pepper.priv";
+const PEPPER_FILE = "database-priv";
 
 /**
  * Get pepper from filesystem, if not found, create it

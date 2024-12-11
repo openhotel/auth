@@ -47,13 +47,15 @@ export const loginPostRequest: RequestType = {
         message: "Your email is not verified!",
       });
 
-    // If the password hash starts with 'P.', it means that the password was peppered, otherwise its and old hash and doesn't need to be checked with the pepper
-    const result = account.passwordHash.startsWith("P.")
-      ? bcrypt.compareSync(
+    if(!account.passwordHash)
+      return getResponse(HttpStatusCode.FORBIDDEN, {
+        message: "Email or password not valid!",
+      });
+    
+    const result = bcrypt.compareSync(
           await pepperPassword(password),
-          account.passwordHash.substring(2),
-        )
-      : bcrypt.compareSync(password, account.passwordHash);
+          account.passwordHash,
+        );
 
     if (!result)
       return getResponse(HttpStatusCode.FORBIDDEN, {

@@ -77,9 +77,7 @@ export const registerPostRequest: RequestType = {
     const expireIn = accountWithoutVerificationDays * 24 * 60 * 60 * 1000;
 
     const passWithPepper = await pepperPassword(password);
-    const passWithSalt = bcrypt.hashSync(passWithPepper, bcrypt.genSaltSync(8));
-    // We add a prefix, so old passwords without pepper can be detected
-    const passwordHash = "P." + passWithSalt;
+    const passwordHash = bcrypt.hashSync(passWithPepper, bcrypt.genSaltSync(8));
 
     // Every key related to the account is temporary until the account is verified or freed if not
     await System.db.set(
