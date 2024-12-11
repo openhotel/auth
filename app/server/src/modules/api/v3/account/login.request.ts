@@ -47,15 +47,15 @@ export const loginPostRequest: RequestType = {
         message: "Your email is not verified!",
       });
 
-    if(!account.passwordHash)
+    if (!account.passwordHash)
       return getResponse(HttpStatusCode.FORBIDDEN, {
         message: "Email or password not valid!",
       });
-    
+
     const result = bcrypt.compareSync(
-          await pepperPassword(password),
-          account.passwordHash,
-        );
+      await pepperPassword(password),
+      account.passwordHash,
+    );
 
     if (!result)
       return getResponse(HttpStatusCode.FORBIDDEN, {
