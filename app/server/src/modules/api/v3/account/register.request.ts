@@ -88,7 +88,7 @@ export const registerPostRequest: RequestType = {
       {
         accountId,
         username,
-        email: emailHash,
+        emailHash,
         passwordHash,
         createdAt: Date.now(),
         verified: !isEmailVerificationEnabled,

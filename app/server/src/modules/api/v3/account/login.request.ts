@@ -11,6 +11,7 @@ import * as bcrypt from "@da/bcrypt";
 import { RequestKind } from "shared/enums/request.enums.ts";
 import { pepperPassword } from "shared/utils/pepper.utils.ts";
 import { getEmailHash } from "shared/utils/account.utils.ts";
+import { Account } from "shared/types/account.types.ts";
 
 export const loginPostRequest: RequestType = {
   method: RequestMethod.POST,
@@ -38,7 +39,7 @@ export const loginPostRequest: RequestType = {
         message: "Email or password not valid!",
       });
 
-    const account = await System.db.get(["accounts", accountByEmail]);
+    const account = await System.db.get<Account>(["accounts", accountByEmail]);
     if (!account)
       return getResponse(HttpStatusCode.FORBIDDEN, {
         message: "Contact an administrator!",

@@ -23,12 +23,14 @@ export default {
       const accountKey = account.key;
       const accountValue = account.value;
 
-      const email = await getEmailHash(accountValue.email);
-      await db.set(accountKey, { ...accountValue, email });
+      const emailHash = await getEmailHash(accountValue.email);
 
       // create table emailsByHash
       const encryptedEmail = await encrypt(accountValue.email, DB_SECRET_KEY);
-      await db.set(["emailsByHash", email], encryptedEmail);
+
+      delete accountValue.email;
+      await db.set(accountKey, { ...accountValue, emailHash });
+      await db.set(["emailsByHash", emailHash], encryptedEmail);
     }
 
     // accountsByEmail
@@ -58,9 +60,14 @@ export default {
       const accountKey = account.key;
       const accountValue = account.value;
 
-      const encryptedEmail = await db.get(["emailsByHash", accountValue.email]);
+      const encryptedEmail = await db.get([
+        "emailsByHash",
+        accountValue.emailHash,
+      ]);
 
       const email = await decrypt(encryptedEmail, DB_SECRET_KEY);
+
+      delete accountValue.emailHash;
       await db.set(accountKey, { ...accountValue, email });
     }
 

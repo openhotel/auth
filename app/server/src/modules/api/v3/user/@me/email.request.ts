@@ -18,7 +18,7 @@ export const emailGetRequest: RequestType = {
       return getResponse(HttpStatusCode.FORBIDDEN);
 
     const account = await System.accounts.getFromRequest(request);
-    const email = await getEmailByHash(account.email);
+    const email = await getEmailByHash(account.emailHash);
 
     return getResponse(HttpStatusCode.OK, {
       data: {

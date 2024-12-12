@@ -21,7 +21,7 @@ export const getRequest: RequestType = {
     if (await System.otp.isOTPVerified(account.accountId))
       return getResponse(HttpStatusCode.CONFLICT);
 
-    const email = await getEmailByHash(account.email);
+    const email = await getEmailByHash(account.emailHash);
     const uri = await System.otp.generateOTP(account.accountId, email);
 		
 		return getResponse(HttpStatusCode.OK, { data: { uri } });
