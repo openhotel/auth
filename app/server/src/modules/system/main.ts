@@ -50,13 +50,6 @@ export const System = (() => {
 
     await $email.load();
     $api.load();
-
-    const accounts = await $db.list({ prefix: ["accounts"] });
-    const accountsByEmail = await $db.list({ prefix: ["accountsByEmail"] });
-    const emailsByHash = await $db.list({ prefix: ["emailsByHash"] });
-    console.log(accounts);
-    console.log(accountsByEmail);
-    console.log(emailsByHash);
   };
 
   const getConfig = (): ConfigTypes => $config;

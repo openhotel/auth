@@ -1,5 +1,4 @@
 import { Migration, DbMutable, encrypt, decrypt } from "@oh/utils";
-import { getEmailHash } from "shared/utils/account.utils.ts";
 
 export default {
   id: "2024-12-12--01-51-mail-encryption",
@@ -9,6 +8,14 @@ export default {
     if (!DB_SECRET_KEY) {
       throw new Error("DB_SECRET_KEY not found");
     }
+
+    const getEmailHash = async (text: string): Promise<string> => {
+      const hashedEmail = await crypto.subtle.digest(
+        "SHA-256",
+        new TextEncoder().encode(text),
+      );
+      return btoa(String.fromCharCode(...new Uint8Array(hashedEmail)));
+    };
 
     // accounts
     const accounts = await db.list({ prefix: ["accounts"] });
