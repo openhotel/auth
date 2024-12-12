@@ -23,7 +23,7 @@ export const getRequest: RequestType = {
 
     const email = await getEmailByHash(account.emailHash);
     const uri = await System.otp.generateOTP(account.accountId, email);
-		
-		return getResponse(HttpStatusCode.OK, { data: { uri } });
+
+    return getResponse(HttpStatusCode.OK, { data: { uri } });
   },
 };
