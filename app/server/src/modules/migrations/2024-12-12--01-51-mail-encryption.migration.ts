@@ -1,7 +1,8 @@
 import { Migration, DbMutable, encrypt, decrypt } from "@oh/utils";
+import { getEmailHash } from "shared/utils/account.utils.ts";
 
 export default {
-  id: "2024-12-07--01-48-mail-encryption",
+  id: "2024-12-12--01-51-mail-encryption",
   description: "Encrypt user email addresses stored in the database",
   up: async (db: DbMutable) => {
     const DB_SECRET_KEY = Deno.env.get("DB_SECRET_KEY");
@@ -15,8 +16,12 @@ export default {
       const accountKey = account.key;
       const accountValue = account.value;
 
-      const email = await encrypt(accountValue.email, DB_SECRET_KEY);
+      const email = await getEmailHash(accountValue.email);
       await db.set(accountKey, { ...accountValue, email });
+
+      // create table emailsByHash
+      const encryptedEmail = await encrypt(accountValue.email, DB_SECRET_KEY);
+      await db.set(["emailsByHash", email], encryptedEmail);
     }
 
     // accountsByEmail
@@ -27,9 +32,9 @@ export default {
       const accountValue = account.value;
 
       if (email) {
-        const encryptedEmail = await encrypt(email, DB_SECRET_KEY);
+        const emailHash = await getEmailHash(email);
 
-        await db.set(["accountsByEmail", encryptedEmail], accountValue);
+        await db.set(["accountsByEmail", emailHash], accountValue);
         await db.delete(oldKey);
       }
     }
@@ -39,13 +44,16 @@ export default {
     if (!DB_SECRET_KEY) {
       throw new Error("DB_SECRET_KEY not found");
     }
+
     // accounts
     const accounts = await db.list({ prefix: ["accounts"] });
     for await (const account of accounts) {
       const accountKey = account.key;
       const accountValue = account.value;
 
-      const email = await decrypt(accountValue.email, DB_SECRET_KEY);
+      const encryptedEmail = await db.get(["emailsByHash", accountValue.email]);
+
+      const email = await decrypt(encryptedEmail, DB_SECRET_KEY);
       await db.set(accountKey, { ...accountValue, email });
     }
 
@@ -57,11 +65,18 @@ export default {
       const accountValue = account.value;
 
       if (email) {
-        const decryptedEmail = await decrypt(email, DB_SECRET_KEY);
+        const encryptedEmail = await db.get(["emailsByHash", email]);
+
+        const decryptedEmail = await decrypt(encryptedEmail, DB_SECRET_KEY);
 
         await db.set(["accountsByEmail", decryptedEmail], accountValue);
         await db.delete(oldKey);
       }
+    }
+
+    // emailsByHash
+    for (const { key } of await db.list({ prefix: ["emailsByHash"] })) {
+      await db.delete(key);
     }
   },
 } as Migration;

@@ -7,7 +7,7 @@ import {
 import { hasRequestAccess } from "shared/utils/scope.utils.ts";
 import { RequestKind } from "shared/enums/request.enums.ts";
 import { System } from "modules/system/main.ts";
-import { getDecryptedEmail } from "shared/utils/account.utils.ts";
+import { getEmailByHash } from "shared/utils/account.utils.ts";
 
 export const emailGetRequest: RequestType = {
   method: RequestMethod.GET,
@@ -18,7 +18,7 @@ export const emailGetRequest: RequestType = {
       return getResponse(HttpStatusCode.FORBIDDEN);
 
     const account = await System.accounts.getFromRequest(request);
-    const email = await getDecryptedEmail(account.email);
+    const email = await getEmailByHash(account.email);
 
     return getResponse(HttpStatusCode.OK, {
       data: {

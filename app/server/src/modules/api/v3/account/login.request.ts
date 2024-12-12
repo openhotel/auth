@@ -9,8 +9,8 @@ import {
 import { System } from "modules/system/main.ts";
 import * as bcrypt from "@da/bcrypt";
 import { RequestKind } from "shared/enums/request.enums.ts";
-import { getEncryptedEmail } from "shared/utils/account.utils.ts";
 import { pepperPassword } from "shared/utils/pepper.utils.ts";
+import { getEmailHash } from "shared/utils/account.utils.ts";
 
 export const loginPostRequest: RequestType = {
   method: RequestMethod.POST,
@@ -30,12 +30,8 @@ export const loginPostRequest: RequestType = {
         message: "Email or password not valid!",
       });
 
-    const encryptedEmail = await getEncryptedEmail(email);
-
-    const accountByEmail = await System.db.get([
-      "accountsByEmail",
-      encryptedEmail,
-    ]);
+    const emailHash = await getEmailHash(email);
+    const accountByEmail = await System.db.get(["accountsByEmail", emailHash]);
 
     if (!accountByEmail)
       return getResponse(HttpStatusCode.FORBIDDEN, {

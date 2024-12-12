@@ -7,7 +7,7 @@ import {
 import { System } from "modules/system/main.ts";
 import { hasRequestAccess } from "shared/utils/scope.utils.ts";
 import { RequestKind } from "shared/enums/request.enums.ts";
-import { getDecryptedEmail } from "shared/utils/account.utils.ts";
+import { getEmailByHash } from "shared/utils/account.utils.ts";
 
 export const getRequest: RequestType = {
   method: RequestMethod.GET,
@@ -21,7 +21,7 @@ export const getRequest: RequestType = {
     if (await System.otp.isOTPVerified(account.accountId))
       return getResponse(HttpStatusCode.CONFLICT);
 
-    const email = await getDecryptedEmail(account.email);
+    const email = await getEmailByHash(account.email);
     const uri = await System.otp.generateOTP(account.accountId, email);
 		
 		return getResponse(HttpStatusCode.OK, { data: { uri } });

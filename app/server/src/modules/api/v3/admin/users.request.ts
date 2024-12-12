@@ -7,7 +7,7 @@ import {
 import { hasRequestAccess } from "shared/utils/scope.utils.ts";
 import { RequestKind } from "shared/enums/request.enums.ts";
 import { System } from "modules/system/main.ts";
-import { getDecryptedEmail } from "shared/utils/account.utils.ts";
+import { getEmailByHash } from "shared/utils/account.utils.ts";
 
 export const usersGetRequest: RequestType = {
   method: RequestMethod.GET,
@@ -21,7 +21,7 @@ export const usersGetRequest: RequestType = {
       (await System.accounts.getList()).map(async (account) => ({
         accountId: account.accountId,
         username: account.username,
-        email: await getDecryptedEmail(account.email),
+        email: await getEmailByHash(account.email),
         admin: Boolean(await System.admins.get(account.accountId)),
         otp: await System.otp.isOTPVerified(account.accountId),
       })),
