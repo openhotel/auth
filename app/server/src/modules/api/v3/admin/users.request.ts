@@ -21,7 +21,7 @@ export const usersGetRequest: RequestType = {
       (await System.accounts.getList()).map(async (account) => ({
         accountId: account.accountId,
         username: account.username,
-        email: await getEmailByHash(account.email),
+        email: await getEmailByHash(account.emailHash),
         admin: Boolean(await System.admins.get(account.accountId)),
         otp: await System.otp.isOTPVerified(account.accountId),
       })),
