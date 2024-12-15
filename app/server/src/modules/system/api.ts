@@ -60,7 +60,6 @@ export const api = () => {
                 {
                   headers: {
                     "content-type": "text/html",
-                    "access-control-allow-origin": "https://hotel.alqubo.es",
                   },
                 },
               );
