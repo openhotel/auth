@@ -11,7 +11,7 @@ import { RequestKind } from "shared/enums/request.enums.ts";
 export const pingGetRequest: RequestType = {
   method: RequestMethod.PATCH,
   pathname: "/ping",
-  kind: RequestKind.ACCOUNT,
+  kind: RequestKind.CONNECTION,
   func: async (request: Request, url: URL) => {
     const connectionId = url.searchParams.get("connectionId");
     if (!connectionId) return getResponse(HttpStatusCode.FORBIDDEN);
