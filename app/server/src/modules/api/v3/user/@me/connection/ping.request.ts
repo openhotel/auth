@@ -23,9 +23,10 @@ export const pingGetRequest: RequestType = {
       const connection =
         await System.connections.getConnectionByConnection(connectionId);
 
+      console.log(userAgent, ip, " -- ", connection.userAgent, connection.ip);
       if (
         !connection ||
-        connection?.connectionId !== connectionId ||
+        connection.connectionId !== connectionId ||
         connection.userAgent !== userAgent ||
         connection.ip !== ip
       )
