@@ -42,7 +42,6 @@ export const mainPostRequest: RequestType = {
       Boolean($public),
     );
 
-    console.log(response);
     if (!response) return getResponse(HttpStatusCode.NOT_ACCEPTABLE);
 
     return getResponse(HttpStatusCode.OK, {
