@@ -31,13 +31,18 @@ export const mainPostRequest: RequestType = {
     if (!(await hasRequestAccess({ request })))
       return getResponse(HttpStatusCode.FORBIDDEN);
 
-    const { name } = await request.json();
+    const { name, public: $public } = await request.json();
 
     if (!name) return getResponse(HttpStatusCode.BAD_REQUEST);
 
     const account = await System.accounts.getFromRequest(request);
-    const response = await System.hotels.add(account.accountId, name);
+    const response = await System.hotels.add(
+      account.accountId,
+      name,
+      Boolean($public),
+    );
 
+    console.log(response);
     if (!response) return getResponse(HttpStatusCode.NOT_ACCEPTABLE);
 
     return getResponse(HttpStatusCode.OK, {
@@ -56,7 +61,7 @@ export const mainPatchRequest: RequestType = {
     if (!(await hasRequestAccess({ request })))
       return getResponse(HttpStatusCode.FORBIDDEN);
 
-    const { hotelId, name } = await request.json();
+    const { hotelId, name, public: $public } = await request.json();
 
     if (!hotelId || !name) return getResponse(HttpStatusCode.BAD_REQUEST);
 
@@ -65,7 +70,7 @@ export const mainPatchRequest: RequestType = {
     if (!hotel || hotel.accountId !== account.accountId)
       return getResponse(HttpStatusCode.BAD_REQUEST);
 
-    const data = await System.hotels.update(hotelId, name);
+    const data = await System.hotels.update(hotelId, name, Boolean($public));
 
     return getResponse(HttpStatusCode.OK, data);
   },
