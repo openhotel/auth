@@ -1,19 +1,19 @@
 .card {
-    min-width: 35rem;
-    min-height: 40rem;
+  min-width: 35rem;
+  min-height: 40rem;
 
-        margin: auto;
+  margin: auto;
 
-    > main {
-        padding: 2.5rem;
-    }
+  > main {
+    padding: 2.5rem;
+  }
 }
 
 .footer {
-    position: absolute;
-    justify-content: space-between;
-    bottom: 0;
-    display: flex;
-    width: 100%;
-    padding: 2rem 4rem;
+  position: absolute;
+  justify-content: space-between;
+  bottom: 0;
+  display: flex;
+  width: 100%;
+  padding: 2rem 4rem;
 }
