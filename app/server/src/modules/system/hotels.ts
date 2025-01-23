@@ -102,7 +102,10 @@ export const hotels = () => {
 
     for (const { integrationId } of hotel.integrations) {
       const accounts = await getAccountsByIntegrationId(hotelId, integrationId);
-      for (const { accountId } of accounts)
+
+      for (const {
+        value: { accountId },
+      } of accounts)
         await System.connections.remove(accountId, hotelId, integrationId);
 
       await System.db.delete(["hotelsByConnectId", integrationId]);
