@@ -100,8 +100,13 @@ export const hotels = () => {
       hotelsIdList.filter(($hotelId: string) => hotelId !== $hotelId),
     );
 
-    for (const { integrationId } of hotel.integrations)
+    for (const { integrationId } of hotel.integrations) {
+      const accounts = await getAccountsByIntegrationId(hotelId, integrationId);
+      for (const { accountId } of accounts)
+        await System.connections.remove(accountId, hotelId, integrationId);
+
       await System.db.delete(["hotelsByConnectId", integrationId]);
+    }
 
     await System.db.delete(["hotels", hotelId]);
   };
