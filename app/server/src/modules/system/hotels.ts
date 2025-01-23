@@ -14,7 +14,7 @@ export const hotels = () => {
   ) => {
     return (
       await System.db.list({
-        prefix: ["integrationsByHotelsByAccountId"],
+        prefix: ["integrationsByAccountId"],
       })
     ).filter(({ key }) => key[2] === hotelId && key[3] === integrationId);
   };
