@@ -4,8 +4,8 @@ import react from "@vitejs/plugin-react";
 
 const PROXY_URL =
   process.platform === "win32"
-    ? "http://127.0.0.1:19940"
-    : "http://localhost:19940";
+    ? "http://127.0.0.1:20240"
+    : "http://localhost:20240";
 
 export default defineConfig({
   clearScreen: false,
