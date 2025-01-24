@@ -28,8 +28,7 @@ jobs:
         run: corepack enable
 
       - name: Install dependencies
-        working-directory: ./app/client
         run: yarn install --immutable
 
       - name: Run Prettier check
-        run: prettier -c ./
+        run: yarn run prettier:check
