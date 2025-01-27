@@ -211,6 +211,7 @@ export const AdminUsersComponent = () => {
               verified: user.verified
                 ? "✅"
                 : `⏳ ${Math.floor(remainingMinutes / 60)} hours ${remainingMinutes % 60} minutes`,
+              githubLogin: user.githubLogin,
               createdAt: dayjs(user.createdAt).format("YYYY/MM/DD HH:mm:ss"),
             };
           })}
@@ -237,6 +238,11 @@ export const AdminUsersComponent = () => {
               sortable: true,
               key: "otp",
               label: "2FA",
+            },
+            {
+              sortable: true,
+              key: "githubLogin",
+              label: "github",
             },
             {
               sortable: true,
