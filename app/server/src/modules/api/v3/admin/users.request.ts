@@ -24,7 +24,7 @@ export const usersGetRequest: RequestType = {
           username: account.username,
           email: await getEmailByHash(account.emailHash),
           admin: Boolean(await System.admins.get(account.accountId)),
-          otp: await System.otp.isOTPVerified(account.accountId),
+          otp: await System.accounts.otp(account.accountId).isVerified(),
           createdAt: account.createdAt,
           verified: account.verified,
           languages: account.languages,

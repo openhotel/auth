@@ -10,8 +10,6 @@ import { System } from "modules/system/main.ts";
 import * as bcrypt from "@da/bcrypt";
 import { RequestKind } from "shared/enums/request.enums.ts";
 import { pepperPassword } from "shared/utils/pepper.utils.ts";
-import { getEmailHash } from "shared/utils/account.utils.ts";
-import { Account } from "shared/types/account.types.ts";
 
 export const loginPostRequest: RequestType = {
   method: RequestMethod.POST,
@@ -31,18 +29,11 @@ export const loginPostRequest: RequestType = {
         message: "Email or password not valid!",
       });
 
-    const emailHash = await getEmailHash(email);
-    const accountByEmail = await System.db.get(["accountsByEmail", emailHash]);
+    const account = await System.accounts.getByEmail(email);
 
-    if (!accountByEmail)
-      return getResponse(HttpStatusCode.FORBIDDEN, {
-        message: "Email or password not valid!",
-      });
-
-    const account = await System.db.get<Account>(["accounts", accountByEmail]);
     if (!account)
       return getResponse(HttpStatusCode.FORBIDDEN, {
-        message: "Contact an administrator!",
+        message: "Email or password not valid!",
       });
 
     if (!account.verified)
@@ -65,18 +56,9 @@ export const loginPostRequest: RequestType = {
         message: "Email or password not valid!",
       });
 
-    const accountOTP = await System.db.get([
-      "otpByAccountId",
-      account.accountId,
-    ]);
-
-    let isValidOTP = true;
-
-    if (
-      accountOTP?.verified &&
-      (!otpToken || !System.otp.verify(accountOTP.secret, otpToken))
-    )
-      isValidOTP = false;
+    const isValidOTP = await System.accounts
+      .otp(account.accountId)
+      .check(otpToken);
 
     if (!(await System.captcha.verify(captchaId)))
       return Response.json(

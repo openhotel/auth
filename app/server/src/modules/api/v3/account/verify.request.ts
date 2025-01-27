@@ -7,7 +7,7 @@ import {
 import { System } from "modules/system/main.ts";
 import * as bcrypt from "@da/bcrypt";
 import { RequestKind } from "shared/enums/request.enums.ts";
-import { Account } from "shared/types/account.types.ts";
+import { DbAccount } from "shared/types/account.types.ts";
 
 export const verifyGetRequest: RequestType = {
   method: RequestMethod.GET,
@@ -23,7 +23,7 @@ export const verifyGetRequest: RequestType = {
 
     if (!accountByVerifyId) return getResponse(HttpStatusCode.FORBIDDEN);
 
-    const account = await System.db.get<Account>([
+    const account = await System.db.get<DbAccount>([
       "accounts",
       accountByVerifyId.accountId,
     ]);

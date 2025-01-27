@@ -3,7 +3,6 @@ import { ConfigTypes, Envs } from "shared/types/main.ts";
 import { getConfig as $getConfig, getDb, update, DbMutable } from "@oh/utils";
 import { captcha } from "./captcha.ts";
 import { email } from "./email.ts";
-import { otp } from "./otp.ts";
 import { CONFIG_DEFAULT } from "shared/consts/config.consts.ts";
 import { tokens } from "./tokens.ts";
 import { accounts } from "./accounts.ts";
@@ -19,7 +18,6 @@ export const System = (() => {
   const $api = api();
   const $captcha = captcha();
   const $email = email();
-  const $otp = otp();
   const $tokens = tokens();
   const $accounts = accounts();
   const $admins = admins();
@@ -83,7 +81,6 @@ export const System = (() => {
     api: $api,
     captcha: $captcha,
     email: $email,
-    otp: $otp,
     tokens: $tokens,
     accounts: $accounts,
     admins: $admins,

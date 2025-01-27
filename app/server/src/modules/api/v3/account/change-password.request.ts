@@ -8,7 +8,7 @@ import { System } from "modules/system/main.ts";
 import * as bcrypt from "@da/bcrypt";
 import { PASSWORD_REGEX } from "shared/consts/main.ts";
 import { RequestKind } from "shared/enums/request.enums.ts";
-import { Account } from "shared/types/account.types.ts";
+import { DbAccount } from "shared/types/account.types.ts";
 import { pepperPassword } from "shared/utils/pepper.utils.ts";
 
 export const changePasswordPostRequest: RequestType = {
@@ -38,7 +38,7 @@ export const changePasswordPostRequest: RequestType = {
       });
     }
 
-    const account = await System.db.get<Account>([
+    const account = await System.db.get<DbAccount>([
       "accounts",
       recoverRequest.accountId,
     ]);

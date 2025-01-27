@@ -21,20 +21,14 @@ export const verifyGetRequest: RequestType = {
 
     const account = await System.accounts.getFromRequest(request);
 
-    const accountOTP = await System.db.get([
-      "otpByAccountId",
+    const { isVerified, check, verify } = System.accounts.otp(
       account.accountId,
-    ]);
-    if (!accountOTP) return getResponse(HttpStatusCode.NOT_FOUND);
-    if (accountOTP.verified) return getResponse(HttpStatusCode.CONFLICT);
+    );
 
-    const isValid = System.otp.verify(accountOTP.secret, token);
-    if (!isValid) return getResponse(HttpStatusCode.FORBIDDEN);
+    if (await isVerified()) return getResponse(HttpStatusCode.CONFLICT);
+    if (!(await check(token))) return getResponse(HttpStatusCode.FORBIDDEN);
 
-    await System.db.set(["otpByAccountId", account.accountId], {
-      ...accountOTP,
-      verified: true,
-    });
+    await verify();
 
     return getResponse(HttpStatusCode.OK);
   },

@@ -18,11 +18,11 @@ export const getRequest: RequestType = {
       return getResponse(HttpStatusCode.FORBIDDEN);
 
     const account = await System.accounts.getFromRequest(request);
-    if (await System.otp.isOTPVerified(account.accountId))
-      return getResponse(HttpStatusCode.CONFLICT);
+    const otp = System.accounts.otp(account.accountId);
 
-    const email = await getEmailByHash(account.emailHash);
-    const uri = await System.otp.generateOTP(account.accountId, email);
+    if (await otp.isVerified()) return getResponse(HttpStatusCode.CONFLICT);
+
+    const uri = await otp.create();
 
     return getResponse(HttpStatusCode.OK, { data: { uri } });
   },

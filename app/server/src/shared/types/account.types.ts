@@ -1,9 +1,23 @@
-export type Account = {
+export type DbAccount = {
   accountId: string;
   username: string;
+
   emailHash: string;
   passwordHash: string;
-  createdAt: Date;
+
+  languages: string[];
+
   verified: boolean;
+
+  createdAt: number;
+  updatedAt: number;
+
+  githubLogin?: string;
+};
+
+export type AccountCreation = {
+  email: string;
+  username: string;
+  password: string;
   languages: string[];
 };

@@ -17,7 +17,7 @@ export const deleteRequest: RequestType = {
       return getResponse(HttpStatusCode.FORBIDDEN);
 
     const account = await System.accounts.getFromRequest(request);
-    await System.db.delete(["otpByAccountId", account.accountId]);
+    await System.accounts.otp(account.accountId).delete();
 
     return getResponse(HttpStatusCode.OK);
   },
