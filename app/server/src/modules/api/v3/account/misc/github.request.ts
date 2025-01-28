@@ -27,7 +27,7 @@ export const githubGetRequest: RequestType = {
 
     if (!config.github.enabled) return getResponse(HttpStatusCode.IM_A_TEAPOT);
 
-    const account = await System.accounts.getFromRequest(request);
+    const account = await System.accounts.getByRequest(request);
     const state = getRandomString(32);
 
     const redirectUri = `${config.url}/account/github`;
@@ -54,7 +54,7 @@ export const githubPostRequest: RequestType = {
 
     const { code, state } = await request.json();
 
-    const account = await System.accounts.getFromRequest(request);
+    const account = await System.accounts.getByRequest(request);
 
     const foundState = await System.db.get(["githubState", account.accountId]);
     if (state !== foundState) return getResponse(HttpStatusCode.FORBIDDEN);
@@ -101,7 +101,7 @@ export const githubDeleteRequest: RequestType = {
     const config = System.getConfig();
     if (!config.github.enabled) return getResponse(HttpStatusCode.IM_A_TEAPOT);
 
-    const account = await System.accounts.getFromRequest(request);
+    const account = await System.accounts.getByRequest(request);
 
     System.db.delete(["github", account.accountId]);
 

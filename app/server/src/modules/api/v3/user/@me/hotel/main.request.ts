@@ -16,7 +16,7 @@ export const mainGetRequest: RequestType = {
     if (!(await hasRequestAccess({ request })))
       return getResponse(HttpStatusCode.FORBIDDEN);
 
-    const account = await System.accounts.getFromRequest(request);
+    const account = await System.accounts.getByRequest(request);
     const hotels = await System.hotels.getListByAccountId(account.accountId);
 
     return getResponse(HttpStatusCode.OK, { data: { hotels } });
@@ -35,7 +35,7 @@ export const mainPostRequest: RequestType = {
 
     if (!name) return getResponse(HttpStatusCode.BAD_REQUEST);
 
-    const account = await System.accounts.getFromRequest(request);
+    const account = await System.accounts.getByRequest(request);
     const response = await System.hotels.add(
       account.accountId,
       name,
@@ -64,7 +64,7 @@ export const mainPatchRequest: RequestType = {
 
     if (!hotelId || !name) return getResponse(HttpStatusCode.BAD_REQUEST);
 
-    const account = await System.accounts.getFromRequest(request);
+    const account = await System.accounts.getByRequest(request);
     const hotel = await System.hotels.get(hotelId);
     if (!hotel || hotel.accountId !== account.accountId)
       return getResponse(HttpStatusCode.BAD_REQUEST);
@@ -86,7 +86,7 @@ export const mainDeleteRequest: RequestType = {
     const hotelId = url.searchParams.get("hotelId");
     if (!hotelId) return getResponse(HttpStatusCode.BAD_REQUEST);
 
-    const account = await System.accounts.getFromRequest(request);
+    const account = await System.accounts.getByRequest(request);
     const hotel = await System.hotels.get(hotelId);
     if (!hotel || hotel.accountId !== account.accountId)
       return getResponse(HttpStatusCode.BAD_REQUEST);

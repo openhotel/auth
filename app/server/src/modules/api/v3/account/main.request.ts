@@ -16,7 +16,7 @@ export const accountDeleteRequest: RequestType = {
     if (!(await hasRequestAccess({ request })))
       return getResponse(HttpStatusCode.FORBIDDEN);
 
-    const account = await System.accounts.getFromRequest(request);
+    const account = await System.accounts.getByRequest(request);
     await System.accounts.remove(account.accountId);
 
     return getResponse(HttpStatusCode.OK);

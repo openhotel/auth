@@ -17,7 +17,7 @@ export const mainGetRequest: RequestType = {
     if (!(await hasRequestAccess({ request, scopes: [] })))
       return getResponse(HttpStatusCode.FORBIDDEN);
 
-    const account = await System.accounts.getFromRequest(request);
+    const account = await System.accounts.getByRequest(request);
     const admin = Boolean(await System.admins.get(account.accountId));
 
     const githubData = await System.db.get(["github", account.accountId]);
@@ -52,7 +52,7 @@ export const mainPatchRequest: RequestType = {
         message: "Language is not valid!",
       });
 
-    const account = await System.accounts.getFromRequest(request);
+    const account = await System.accounts.getByRequest(request);
 
     await System.db.set(["accounts", account.accountId], {
       ...account,

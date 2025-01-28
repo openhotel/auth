@@ -18,7 +18,7 @@ export const mainPostRequest: RequestType = {
 
     const { hotelId, name, redirectUrl, type } = await request.json();
 
-    const account = await System.accounts.getFromRequest(request);
+    const account = await System.accounts.getByRequest(request);
     const hotel = await System.hotels.get(hotelId);
 
     if (!hotel || hotel.accountId !== account.accountId)
@@ -47,7 +47,7 @@ export const mainGetRequest: RequestType = {
     const hotelId = url.searchParams.get("hotelId");
     const integrationId = url.searchParams.get("integrationId");
 
-    const account = await System.accounts.getFromRequest(request);
+    const account = await System.accounts.getByRequest(request);
     const hotel = await System.hotels.get(hotelId);
 
     if (
@@ -78,7 +78,7 @@ export const mainDeleteRequest: RequestType = {
     const hotelId = url.searchParams.get("hotelId");
     const integrationId = url.searchParams.get("integrationId");
 
-    const account = await System.accounts.getFromRequest(request);
+    const account = await System.accounts.getByRequest(request);
     const hotel = await System.hotels.get(hotelId);
 
     if (

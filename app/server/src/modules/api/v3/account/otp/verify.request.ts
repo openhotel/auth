@@ -19,7 +19,7 @@ export const verifyGetRequest: RequestType = {
     const token = url.searchParams.get("token");
     if (!token) return getResponse(HttpStatusCode.BAD_REQUEST);
 
-    const account = await System.accounts.getFromRequest(request);
+    const account = await System.accounts.getByRequest(request);
 
     const { isVerified, check, verify } = System.accounts.otp(
       account.accountId,

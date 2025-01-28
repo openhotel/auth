@@ -42,7 +42,7 @@ export const mainPostRequest: RequestType = {
     );
     if (!foundIntegration) return getResponse(HttpStatusCode.BAD_REQUEST);
 
-    const account = await System.accounts.getFromRequest(request);
+    const account = await System.accounts.getByRequest(request);
 
     const userAgent = request.headers.get("user-agent");
     const ip = getIpFromRequest(request);
@@ -79,7 +79,7 @@ export const mainGetRequest: RequestType = {
     const hotelId = url.searchParams.get("hotelId");
     const integrationId = url.searchParams.get("integrationId");
 
-    const account = await System.accounts.getFromRequest(request);
+    const account = await System.accounts.getByRequest(request);
     const connections = await System.connections.getList(account.accountId);
 
     if (!connections) return getResponse(HttpStatusCode.NOT_FOUND);
@@ -117,7 +117,7 @@ export const mainDeleteRequest: RequestType = {
     if (!(await hasRequestAccess({ request })))
       return getResponse(HttpStatusCode.FORBIDDEN);
 
-    const account = await System.accounts.getFromRequest(request);
+    const account = await System.accounts.getByRequest(request);
 
     const hotelId = url.searchParams.get("hotelId");
     const integrationId = url.searchParams.get("integrationId");

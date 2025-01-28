@@ -4,7 +4,9 @@ import { getEmailHash, getEncryptedEmail } from "shared/utils/account.utils.ts";
 import { pepperPassword } from "shared/utils/pepper.utils.ts";
 import * as bcrypt from "@da/bcrypt";
 import { getRandomString } from "@oh/utils";
+
 import { otp } from "./accounts/otp.ts";
+import { hotels } from "./accounts/hotels.ts";
 
 export const accounts = () => {
   const create = async ({
@@ -101,6 +103,9 @@ export const accounts = () => {
     }
   };
 
+  const getList = async (): Promise<DbAccount[]> =>
+    (await System.db.list({ prefix: ["accounts"] })).map(({ value }) => value);
+
   const get = async (accountId: string): Promise<DbAccount> =>
     await System.db.get(["accounts", accountId]);
 
@@ -122,11 +127,7 @@ export const accounts = () => {
     return await get(accountId);
   };
 
-  //
-  const getList = async () =>
-    (await System.db.list({ prefix: ["accounts"] })).map(({ value }) => value);
-
-  const getFromRequest = async ({ headers }: Request) => {
+  const getByRequest = async ({ headers }: Request): Promise<DbAccount> => {
     let accountId = headers.get("account-id");
     const connectionToken = headers.get("connection-token");
 
@@ -165,14 +166,15 @@ export const accounts = () => {
 
   return {
     create,
+    getList,
     get,
     getByUsername,
     getByEmail,
-
-    otp,
-    //
-    getList,
-    getFromRequest,
+    getByRequest,
     remove,
+
+    //
+    otp,
+    hotels,
   };
 };

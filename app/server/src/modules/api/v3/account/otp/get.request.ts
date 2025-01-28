@@ -17,7 +17,7 @@ export const getRequest: RequestType = {
     if (!(await hasRequestAccess({ request })))
       return getResponse(HttpStatusCode.FORBIDDEN);
 
-    const account = await System.accounts.getFromRequest(request);
+    const account = await System.accounts.getByRequest(request);
     const otp = System.accounts.otp(account.accountId);
 
     if (await otp.isVerified()) return getResponse(HttpStatusCode.CONFLICT);

@@ -16,7 +16,7 @@ export const logoutPostRequest: RequestType = {
     if (!(await hasRequestAccess({ request })))
       return getResponse(HttpStatusCode.FORBIDDEN);
 
-    const account = await System.accounts.getFromRequest(request);
+    const account = await System.accounts.getByRequest(request);
 
     await System.db.delete(["accountsByToken", account.accountId]);
     await System.db.delete(["accountsByRefreshToken", account.accountId]);

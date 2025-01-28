@@ -22,7 +22,7 @@ export const bskyPostRequest: RequestType = {
     if (!did || !new RegExp(PROTO_DID_REGEX).test(did))
       return getResponse(HttpStatusCode.FORBIDDEN);
 
-    const account = await System.accounts.getFromRequest(request);
+    const account = await System.accounts.getByRequest(request);
 
     await System.tokens.$fetch(RequestMethod.POST, "/create", Service.AT, {
       username: account.username,

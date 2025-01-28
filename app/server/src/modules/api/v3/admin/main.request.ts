@@ -20,7 +20,7 @@ export const adminPostRequest: RequestType = {
 
     //if no admins, first to call the request, is admin
     if (!adminList.length) {
-      const account = await System.accounts.getFromRequest(request);
+      const account = await System.accounts.getByRequest(request);
       await System.admins.set(account.accountId);
 
       return getResponse(HttpStatusCode.OK);

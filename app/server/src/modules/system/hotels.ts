@@ -1,8 +1,14 @@
 import { System } from "modules/system/main.ts";
 import { generateToken, getTokenData } from "@oh/utils";
 import * as bcrypt from "@da/bcrypt";
+import { DbHotel } from "shared/types/hotel.types.ts";
 
 export const hotels = () => {
+  const get = async (hotelId: string): Promise<DbHotel | null> =>
+    await System.db.get(["hotels", hotelId]);
+
+  //
+
   const getList = async () => {
     const hotelList = await System.db.list({ prefix: ["hotels"] });
     return hotelList.map(({ value }) => value);
@@ -89,10 +95,6 @@ export const hotels = () => {
         return hotel;
       }),
     );
-  };
-
-  const getHotel = async (hotelId: string) => {
-    return await System.db.get(["hotels", hotelId]);
   };
 
   const add = async (accountId: string, name: string, $public: boolean) => {
@@ -274,8 +276,9 @@ export const hotels = () => {
   })();
 
   return {
+    get,
+
     add,
-    get: getHotel,
     update,
     getList,
     remove,
