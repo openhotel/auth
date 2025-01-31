@@ -39,7 +39,7 @@ export const System = (() => {
       return;
 
     $db = getDb({
-      pathname: `./${$config.database.filename}`,
+      pathname: `./${testMode ? "deleteme-database" : $config.database.filename}`,
       backupsPathname: "./database-backups",
     });
 
@@ -57,7 +57,7 @@ export const System = (() => {
       });
 
     await $email.load();
-    $api.load();
+    $api.load(testMode);
   };
 
   const getConfig = (): ConfigTypes => $config;
