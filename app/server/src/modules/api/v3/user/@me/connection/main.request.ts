@@ -37,7 +37,7 @@ export const mainPostRequest: RequestType = {
 
     const account = await System.accounts.getAccount({ request });
 
-    const redirectUrl = await account.connections.active.create({
+    const redirectUrl = await account.connection.create({
       request,
 
       hotelId,
@@ -67,14 +67,14 @@ export const mainGetRequest: RequestType = {
 
     const account = await System.accounts.getAccount({ request });
 
-    const $connections = await account.connections.getConnections();
+    const $connections = await account.integrations.getIntegrations();
     if (!$connections) return getResponse(HttpStatusCode.NOT_FOUND);
 
     const $hotels = [
       ...new Set($connections.map((connection) => connection.hotelId)),
     ];
 
-    const activeConnection = await account.connections.active.get();
+    const activeConnection = await account.connection.get();
 
     const connections = await Promise.all(
       $hotels.map(async (hotelId: string) => {
@@ -148,7 +148,7 @@ export const mainDeleteRequest: RequestType = {
     if (!hotelId || !integrationId)
       return getResponse(HttpStatusCode.BAD_REQUEST);
 
-    await account.connections.remove(hotelId, integrationId);
+    await account.integrations.remove(hotelId, integrationId);
 
     return getResponse(HttpStatusCode.OK);
   },

@@ -2,7 +2,7 @@ import { Migration, DbMutable } from "@oh/utils";
 
 export default {
   id: "2025-01-30--23-47-refactor",
-  description: `refactor`,
+  description: `add spanish language to all previous accounts`,
   up: async (db: DbMutable) => {
     const deleteAll = async (key: string) => {
       const list = await db.list({

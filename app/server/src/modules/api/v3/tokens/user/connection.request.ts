@@ -18,7 +18,7 @@ export const connectionGetRequest: RequestType = {
     const account = await System.accounts.getAccount({ accountId });
     if (!account) return getResponse(HttpStatusCode.FORBIDDEN);
 
-    const connection = await account.connections.active.get();
+    const connection = await account.connection.get();
     if (!connection) return getResponse(HttpStatusCode.FORBIDDEN);
 
     return getResponse(HttpStatusCode.OK, {
