@@ -17,7 +17,7 @@ let serverProcess;
 if (!isDevelopmentMode) {
   Deno.writeTextFileSync("../.env", `DB_SECRET_KEY=DB_SECRET_KEY`);
 
-  const serverCommand = new Deno.Command(Deno.execPath(), {
+  let serverCommand = new Deno.Command(Deno.execPath(), {
     args: ["task", "start", "--testMode"],
     cwd: "../",
   });
