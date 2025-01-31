@@ -22,7 +22,6 @@ export const registerPostRequest: RequestType = {
       let { email, username, password, rePassword, languages, captchaId } =
         await request.json();
 
-      console.log("??????????");
       if (
         !(await System.captcha.verify(captchaId)) ||
         !email ||

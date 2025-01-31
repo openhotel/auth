@@ -7,6 +7,13 @@ export const USER_1 = {
   languages: [LANGUAGE_LIST[2], LANGUAGE_LIST[20], LANGUAGE_LIST[42]],
 };
 
+export const USER_2 = {
+  email: "Frank@bobba.su",
+  username: "Frank",
+  password: "*}_DaP}}kQ&_VndUtpkQ&_V*($P",
+  languages: [LANGUAGE_LIST[1]],
+};
+
 export const INVALID_USERNAMES = ["  asd", "_", "1", "%asdsa", "$#(&%"];
 export const INVALID_EMAILS = ["asdasd", "asd@asdasd", "asdasd.com"];
 export const INVALID_PASSWORD = ["abde345"];

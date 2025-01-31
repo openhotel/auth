@@ -1,3 +1,5 @@
+import * as OTPAuth from "otp";
+
 export const State = () => {
   const getObject = (): any => {
     try {
@@ -10,39 +12,63 @@ export const State = () => {
   const setObject = (data: any) => {
     Deno.writeTextFileSync(
       "__state.json",
-      JSON.stringify({
-        ...getObject(),
-        ...data,
-      }),
+      JSON.stringify(
+        {
+          ...getObject(),
+          ...data,
+        },
+        null,
+        2,
+      ),
     );
   };
 
-  const getAccountId = () => getObject().session?.accountId;
-
-  const setSession = ({ accountId, refreshToken, token }: any) => {
+  const setUser = (email: string, user: any) => {
     setObject({
-      session: {
-        accountId,
-        token,
-        refreshToken,
+      users: {
+        ...(getObject()?.users || {}),
+        [email]: {
+          ...(getUser(email) || {}),
+          ...user,
+        },
       },
     });
   };
 
-  const getSessionHeaders = () => {
-    const { session } = getObject();
+  const getUser = (email: string) => {
+    const { users } = getObject();
+    return (users || {})[email] ?? {};
+  };
+
+  const getSessionHeaders = (email: string) => {
+    const userData = getUser(email);
     return {
-      "account-id": session.accountId,
-      token: session.token,
-      "refresh-token": session.refreshToken,
+      "account-id": userData.accountId,
+      token: userData.token,
+      "refresh-token": userData.refreshToken,
     };
   };
 
-  return {
-    getAccountId,
+  const generateOtp = (email: string) => {
+    const { otpUri } = getUser(email);
+    const otpURL = new URL(otpUri);
+    const totp = new OTPAuth.TOTP({
+      issuer: otpURL.searchParams.get("issuer")!,
+      algorithm: otpURL.searchParams.get("algorithm")!,
+      digits: parseInt(otpURL.searchParams.get("digits")!),
+      period: parseInt(otpURL.searchParams.get("period")!),
+      secret: otpURL.searchParams.get("secret")!,
+    });
 
-    setSession,
+    return totp.generate();
+  };
+
+  return {
+    setUser,
+    getUser,
     getSessionHeaders,
+
+    generateOtp,
   };
 };
 

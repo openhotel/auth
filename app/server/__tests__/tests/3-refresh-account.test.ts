@@ -11,7 +11,7 @@ describe("4. refresh account tokens", () => {
     const { status, data } = await fetcher("/account/refresh", {
       method: "GET",
       headers: {
-        "account-id": STATE.getAccountId(),
+        "account-id": STATE.getUser(USER_1.email).accountId,
       },
     });
     assertEquals(status, 403);
@@ -21,7 +21,7 @@ describe("4. refresh account tokens", () => {
   it("refreshes account session", async () => {
     const { status, data } = await fetcher("/account/refresh", {
       method: "GET",
-      headers: STATE.getSessionHeaders(),
+      headers: STATE.getSessionHeaders(USER_1.email),
     });
     assertEquals(status, 200);
     assertExists(data.accountId);
@@ -29,17 +29,17 @@ describe("4. refresh account tokens", () => {
     assertExists(data.refreshToken);
     assertExists(data.token);
 
-    STATE.setSession(data);
+    STATE.setUser(USER_1.email, data);
   });
 
   it("check if new session token work", async () => {
     const { status, data } = await fetcher("/user/@me", {
       method: "GET",
-      headers: STATE.getSessionHeaders(),
+      headers: STATE.getSessionHeaders(USER_1.email),
     });
     assertEquals(status, 200);
     assertEquals(data, {
-      accountId: STATE.getAccountId(),
+      accountId: STATE.getUser(USER_1.email).accountId,
       languages: USER_1.languages,
       username: USER_1.username,
     });

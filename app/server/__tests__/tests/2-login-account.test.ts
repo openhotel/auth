@@ -48,16 +48,16 @@ describe("3. login an account", () => {
       assertExists(data.refreshToken);
       assertExists(data.token);
 
-      STATE.setSession(data);
+      STATE.setUser(USER_1.email, data);
     });
     it("check if session token work", async () => {
       const { status, data } = await fetcher("/user/@me", {
         method: "GET",
-        headers: STATE.getSessionHeaders(),
+        headers: STATE.getSessionHeaders(USER_1.email),
       });
       assertEquals(status, 200);
       assertEquals(data, {
-        accountId: STATE.getAccountId(),
+        accountId: STATE.getUser(USER_1.email).accountId,
         languages: USER_1.languages,
         username: USER_1.username,
       });
