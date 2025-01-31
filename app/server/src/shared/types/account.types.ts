@@ -22,7 +22,7 @@ export type DbAccount = {
   githubLogin?: string;
 };
 
-export type DbAccountIntegration = {
+export type DbAccountIntegrationConnection = {
   accountId: string;
 
   hotelId: string;
@@ -112,8 +112,7 @@ export type AccountMutable = {
   otp: AccountOtpMutable;
   github: AccountGithubMutable;
   hotels: AccountHotelsMutable;
-  connection: AccountConnectionMutable;
-  integrations: AccountIntegrations;
+  connections: AccountConnections;
 };
 
 export type AccountOtpMutable = {
@@ -138,19 +137,6 @@ export type AccountHotelsMutable = {
   removeIntegration: (hotelId: string, integrationId: string) => Promise<void>;
 };
 
-export type AccountConnectionMutable = {
-  create: (data: AccountConnection) => Promise<string | null>;
-  remove: () => Promise<void>;
-
-  get: () => Promise<DbAccountConnection>;
-
-  checkScopes: (scopes: Scope[]) => Promise<boolean>;
-  ping: (
-    connectionId: string,
-    request: Request,
-  ) => Promise<{ estimatedNextPingIn: number } | null>;
-};
-
 export type AccountConnection = {
   hotelId: string;
   integrationId: string;
@@ -162,7 +148,7 @@ export type AccountConnection = {
   request: Request;
 };
 
-export type DbAccountConnection = {
+export type DbAccountActiveIntegrationConnection = {
   connectionId: string;
 
   hotelId: string;
@@ -177,22 +163,30 @@ export type DbAccountConnection = {
   tokenHash: string;
 };
 
-export type AccountIntegrations = {
+export type AccountConnections = {
   // getConnection: () => Promise<Connection>;
-  getIntegrations: () => Promise<DbAccountIntegration[]>;
-  getIntegration: (
+  getConnections: () => Promise<DbAccountIntegrationConnection[]>;
+  getConnection: (
     hotelId: string,
     integrationId: string,
-  ) => Promise<DbAccountIntegration | null>;
-  update: (hotelId: string, integrationId: string) => Promise<void>;
-  create: (data: AccountIntegrationCreation) => Promise<void>;
+  ) => Promise<DbAccountIntegrationConnection | null>;
+
   remove: (hotelId: string, integrationId: string) => Promise<void>;
   removeAll: () => Promise<void>;
+
+  active: AccountActiveConnection;
 };
 
-export type AccountIntegrationCreation = {
-  hotelId: string;
-  integrationId: string;
+export type AccountActiveConnection = {
+  create: (data: AccountConnection) => Promise<string | null>;
+  get: () => Promise<DbAccountActiveIntegrationConnection | null>;
+  remove: () => Promise<void>;
 
-  scopes: Scope[];
+  check: (hotelId: string, integrationId: string) => Promise<boolean>;
+  checkScopes: (scopes: Scope[]) => Promise<boolean>;
+
+  ping: (
+    connectionId: string,
+    request: Request,
+  ) => Promise<{ estimatedNextPingIn: number } | null>;
 };

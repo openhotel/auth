@@ -155,7 +155,7 @@ export const api = () => {
           account = await System.accounts.getAccount({ request });
           if (!account) return false;
 
-          const connection = await account.connection.get();
+          const connection = await account.connections.getActiveConnection();
           if (!connection) return false;
 
           const hotelData = hotel.getObject();

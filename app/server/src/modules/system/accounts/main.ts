@@ -27,8 +27,7 @@ import { github } from "./github.ts";
 import { admins } from "./admins.ts";
 import { HotelCreation, HotelMutableGet } from "shared/types/hotel.types.ts";
 import { hotels } from "./hotels.ts";
-import { connection } from "./connection.ts";
-import { integrations } from "modules/system/accounts/integrations.ts";
+import { connections } from "./connections/main.ts";
 
 export const accounts = () => {
   const $admins = admins();
@@ -161,19 +160,6 @@ export const accounts = () => {
     return await get(accountId);
   };
 
-  // const getByRequest = async ({ headers }: Request): Promise<DbAccount> => {
-  //   let accountId = headers.get("account-id");
-  //   const connectionToken = headers.get("connection-token");
-  //
-  //   if (!accountId && connectionToken) {
-  //     const connection =
-  //       await System.connections.getConnectionByRawToken(connectionToken);
-  //     accountId = connection.accountId;
-  //   }
-  //
-  //   return await get(accountId);
-  // };
-
   const getByRecoverToken = async (
     recoverToken: string,
   ): Promise<DbAccount | null> => {
@@ -203,13 +189,13 @@ export const accounts = () => {
     connectionId: string,
   ): Promise<DbAccount | null> => {
     const accountByConnectionId = await System.db.get([
-      "accountByConnectionId",
+      "accountByActiveIntegrationConnectionId",
       connectionId,
     ]);
     if (!accountByConnectionId) return null;
 
     const connection = await System.db.get([
-      "connections",
+      "activeIntegrationConnectionByAccountId",
       accountByConnectionId,
     ]);
     if (!connection) return null;
@@ -224,13 +210,13 @@ export const accounts = () => {
       const { id: connectionId, token } = getTokenData(connectionToken);
 
       const accountByConnectionId = await System.db.get([
-        "accountByConnectionId",
+        "accountByActiveIntegrationConnectionId",
         connectionId,
       ]);
       if (!accountByConnectionId) return null;
 
       const connection = await System.db.get([
-        "connections",
+        "activeIntegrationConnectionByAccountId",
         accountByConnectionId,
       ]);
       if (!connection || !bcrypt.compareSync(token, connection.tokenHash))
@@ -281,8 +267,7 @@ export const accounts = () => {
     const $otp = otp(account);
     const $github = github(account);
     const $hotels = hotels(account);
-    const $connection = connection(account);
-    const $integrations = integrations(account);
+    const $connections = connections(account);
 
     const checkPassword = async (password: string): Promise<boolean> => {
       return bcrypt.compareSync(
@@ -503,8 +488,7 @@ export const accounts = () => {
 
       await $github.unlink();
       await $otp.remove();
-      await $connection.remove();
-      await $integrations.removeAll();
+      await $connections.removeAll();
 
       for (const hotel of await getHotels()) await hotel.remove();
 
@@ -515,8 +499,6 @@ export const accounts = () => {
         "accountsByUsername",
         account.username.toLowerCase(),
       ]);
-
-      await System.db.delete(["connections", account.accountId]);
 
       await System.db.delete(["accountsByEmail", account.emailHash]);
       await System.db.delete(["emailsByHash", account.emailHash]);
@@ -570,8 +552,7 @@ export const accounts = () => {
       otp: $otp,
       github: $github,
       hotels: $hotels,
-      connection: $connection,
-      integrations: $integrations,
+      connections: $connections,
     };
   };
 

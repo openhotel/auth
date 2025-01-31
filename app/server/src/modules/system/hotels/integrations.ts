@@ -43,7 +43,12 @@ export const integrations = (hotel: DbHotel): HotelIntegrationsMutable => {
 
     const addAccount = async (accountId: string, scopes: string[]) => {
       await System.db.set(
-        ["integrationsByAccountId", accountId, hotel.hotelId, integrationId],
+        [
+          "integrationConnectionByAccountId",
+          accountId,
+          hotel.hotelId,
+          integrationId,
+        ],
         {
           accountId,
 
@@ -59,7 +64,7 @@ export const integrations = (hotel: DbHotel): HotelIntegrationsMutable => {
 
     const removeAccount = async (accountId: string) => {
       await System.db.delete([
-        "integrationsByAccountId",
+        "integrationConnectionByAccountId",
         accountId,
         hotel.hotelId,
         integrationId,
@@ -68,7 +73,7 @@ export const integrations = (hotel: DbHotel): HotelIntegrationsMutable => {
 
     const getAccounts = async (): Promise<AccountMutable[]> => {
       const integrations = await System.db.list({
-        prefix: ["integrationsByAccountId"],
+        prefix: ["integrationConnectionByAccountId"],
       });
       return await Promise.all(
         integrations
@@ -106,7 +111,7 @@ export const integrations = (hotel: DbHotel): HotelIntegrationsMutable => {
       for (const account of await getAccounts()) {
         const accountData = account.getObject();
         await System.db.delete([
-          "integrationsByAccountId",
+          "integrationConnectionByAccountId",
           accountData.accountId,
           hotel.hotelId,
           integrationId,

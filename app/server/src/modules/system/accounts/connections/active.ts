@@ -1,15 +1,15 @@
 import {
+  AccountActiveConnection,
   AccountConnection,
-  AccountConnectionMutable,
   DbAccount,
-  DbAccountConnection,
+  DbAccountActiveIntegrationConnection,
 } from "shared/types/account.types.ts";
 import { System } from "modules/system/main.ts";
 import { Scope } from "shared/enums/scopes.enums.ts";
-import { generateToken, getIpFromRequest } from "@oh/utils";
 import { Connection } from "shared/types/connection.types.ts";
+import { generateToken, getIpFromRequest } from "@oh/utils";
 
-export const connection = (account: DbAccount): AccountConnectionMutable => {
+export const active = (account: DbAccount): AccountActiveConnection => {
   const create = async ({
     hotelId,
     integrationId,
@@ -41,14 +41,14 @@ export const connection = (account: DbAccount): AccountConnectionMutable => {
     const ip = getIpFromRequest(request);
 
     await System.db.set(
-      ["accountByConnectionId", connectionId],
+      ["accountByActiveIntegrationConnectionId", connectionId],
       account.accountId,
       {
         expireIn,
       },
     );
     await System.db.set(
-      ["connections", account.accountId],
+      ["activeIntegrationConnectionByAccountId", account.accountId],
       {
         connectionId,
 
@@ -72,19 +72,43 @@ export const connection = (account: DbAccount): AccountConnectionMutable => {
       accountId: account.accountId,
     });
 
-    const foundIntegration = await $account.integrations.getIntegration(
+    const foundIntegration = await $account.connections.getConnection(
       hotelId,
       integrationId,
     );
 
     if (foundIntegration)
-      await $account.integrations.update(hotelId, integrationId);
+      await System.db.set(
+        [
+          "integrationConnectionByAccountId",
+          account.accountId,
+          hotelId,
+          integrationId,
+        ],
+        {
+          ...foundIntegration,
+          updatedAt: Date.now(),
+        },
+      );
     else
-      await $account.integrations.create({
-        hotelId,
-        integrationId,
-        scopes,
-      });
+      await System.db.set(
+        [
+          "integrationConnectionByAccountId",
+          account.accountId,
+          hotelId,
+          integrationId,
+        ],
+        {
+          accountId: account.accountId,
+
+          hotelId,
+          integrationId,
+
+          scopes,
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        },
+      );
 
     const url = new URL(integration.getObject().redirectUrl);
     url.searchParams.append("state", state);
@@ -95,16 +119,26 @@ export const connection = (account: DbAccount): AccountConnectionMutable => {
     return url.href;
   };
 
-  const get = async (): Promise<DbAccountConnection | null> => {
-    return await System.db.get(["connections", account.accountId]);
-  };
+  const get =
+    async (): Promise<DbAccountActiveIntegrationConnection | null> => {
+      return await System.db.get([
+        "activeIntegrationConnectionByAccountId",
+        account.accountId,
+      ]);
+    };
 
   const remove = async () => {
     const connection = await get();
     if (!connection) return;
 
-    await System.db.delete(["accountByConnectionId", connection.connectionId]);
-    await System.db.delete(["connections", account.accountId]);
+    await System.db.delete([
+      "accountByActiveIntegrationConnectionId",
+      connection.connectionId,
+    ]);
+    await System.db.delete([
+      "activeIntegrationConnectionByAccountId",
+      account.accountId,
+    ]);
   };
 
   const ping = async (connectionId: string, request: Request) => {
@@ -126,11 +160,15 @@ export const connection = (account: DbAccount): AccountConnectionMutable => {
     } = System.getConfig();
     const expireIn = connectionTokenMinutes * 60 * 1000;
 
-    await System.db.set(["connections", account.accountId], connection, {
-      expireIn,
-    });
     await System.db.set(
-      ["accountByConnectionId", connection.connectionId],
+      ["activeIntegrationConnectionByAccountId", account.accountId],
+      connection,
+      {
+        expireIn,
+      },
+    );
+    await System.db.set(
+      ["accountByActiveIntegrationConnectionId", connection.connectionId],
       connection.accountId,
       {
         expireIn,
@@ -142,6 +180,15 @@ export const connection = (account: DbAccount): AccountConnectionMutable => {
     return { estimatedNextPingIn };
   };
 
+  const check = async (hotelId: string, integrationId: string) => {
+    const connection = await get();
+    return (
+      !connection ||
+      connection.hotelId !== hotelId ||
+      connection.integrationId !== integrationId
+    );
+  };
+
   const checkScopes = async (scopes: Scope[]): Promise<boolean> => {
     const connection = await get();
     if (!connection) return false;
@@ -151,11 +198,12 @@ export const connection = (account: DbAccount): AccountConnectionMutable => {
 
   return {
     create,
+    get,
     remove,
 
-    get,
+    check,
+    checkScopes,
 
     ping,
-    checkScopes,
   };
 };

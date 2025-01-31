@@ -20,7 +20,7 @@ export const pingGetRequest: RequestType = {
     });
     if (!account) return getResponse(HttpStatusCode.FORBIDDEN);
 
-    const pingResult = await account.connection.ping(connectionId, request);
+    const pingResult = await account.connections.ping(connectionId, request);
     if (!pingResult) return getResponse(HttpStatusCode.FORBIDDEN);
 
     return getResponse(HttpStatusCode.OK, {
