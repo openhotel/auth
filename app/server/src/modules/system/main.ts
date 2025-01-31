@@ -22,7 +22,12 @@ export const System = (() => {
   let $db: DbMutable;
 
   const load = async (envs: Envs, testMode: boolean = false) => {
-    $config = await $getConfig<ConfigTypes>({ defaults: CONFIG_DEFAULT });
+    $config = await $getConfig<ConfigTypes>({
+      defaults: {
+        ...CONFIG_DEFAULT,
+        version: testMode ? "development" : CONFIG_DEFAULT.version,
+      },
+    });
     $envs = envs;
 
     if (
@@ -39,7 +44,7 @@ export const System = (() => {
       return;
 
     $db = getDb({
-      pathname: `./${$config.database.filename}`,
+      pathname: `./${testMode ? "deleteme-database" : $config.database.filename}`,
       backupsPathname: "./database-backups",
     });
 
@@ -57,7 +62,7 @@ export const System = (() => {
       });
 
     await $email.load();
-    $api.load();
+    $api.load(testMode);
   };
 
   const getConfig = (): ConfigTypes => $config;
