@@ -45,8 +45,6 @@ const testsProcess = commandTest.spawn();
 
 const response = await testsProcess.status;
 
-if (serverProcess) {
-  Deno.kill(serverProcess.pid);
-  await deleteDatabase();
-}
+if (serverProcess) Deno.kill(serverProcess.pid);
+
 if (!response.success) throw "Error with tests!";

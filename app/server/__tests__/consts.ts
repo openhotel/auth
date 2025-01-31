@@ -18,3 +18,18 @@ export const INVALID_USERNAMES = ["  asd", "_", "1", "%asdsa", "$#(&%"];
 export const INVALID_EMAILS = ["asdasd", "asd@asdasd", "asdasd.com"];
 export const INVALID_PASSWORD = ["abde345"];
 export const INVALID_LANGUAGE = ["arstotzkan"];
+
+export const HOTEL_1 = {
+  name: "public hotel 1",
+  public: true,
+  integration_1: {
+    name: "integration A",
+    redirectUrl: "http://localhost:1994",
+    type: "client",
+  },
+};
+
+export const HOTEL_2 = {
+  name: "private hotel 2",
+  public: false,
+};

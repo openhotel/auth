@@ -63,10 +63,30 @@ export const State = () => {
     return totp.generate();
   };
 
+  const setHotel = (name: string, hotel: any) => {
+    setObject({
+      hotels: {
+        ...(getObject()?.hotels || {}),
+        [name]: {
+          ...(getHotel(name) || {}),
+          ...hotel,
+        },
+      },
+    });
+  };
+
+  const getHotel = (name: string) => {
+    const { hotels } = getObject();
+    return (hotels || {})[name] ?? {};
+  };
+
   return {
     setUser,
     getUser,
     getSessionHeaders,
+
+    setHotel,
+    getHotel,
 
     generateOtp,
   };
