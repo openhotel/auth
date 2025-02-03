@@ -27,11 +27,11 @@
       position: absolute;
       background: rgb(2, 0, 36);
       background: linear-gradient(
-                      90deg,
-                      rgba(2, 0, 36, 1) 0%,
-                      rgba(0, 0, 0, 0.6628852224483543) 0%,
-                      rgba(27, 27, 27, 0.5816527294511555) 38%,
-                      rgba(83, 83, 83, 0) 100%
+        90deg,
+        rgba(2, 0, 36, 1) 0%,
+        rgba(0, 0, 0, 0.6628852224483543) 0%,
+        rgba(27, 27, 27, 0.5816527294511555) 38%,
+        rgba(83, 83, 83, 0) 100%
       );
       z-index: 0;
     }
@@ -61,18 +61,19 @@
         background-color: #6bb734;
       }
 
-      .online, .offline {
+      .online,
+      .offline {
         margin-bottom: 1rem;
         display: flex;
         align-items: center;
 
-        &::before{
-          content: '';
+        &::before {
+          content: "";
           display: inline-block;
-          width: .75rem;
-          height: .75rem;
+          width: 0.75rem;
+          height: 0.75rem;
           line-height: 2rem;
-          margin-right: .5rem;
+          margin-right: 0.5rem;
           border-radius: 1rem;
         }
       }
