@@ -7,10 +7,10 @@ import {
 import { RequestKind } from "shared/enums/request.enums.ts";
 import { System } from "modules/system/main.ts";
 
-export const mainGetRequest: RequestType = {
-  method: RequestMethod.GET,
+export const mainDeleteRequest: RequestType = {
+  method: RequestMethod.DELETE,
   pathname: "",
-  kind: RequestKind.PUBLIC,
+  kind: RequestKind.ADMIN,
   func: async (request: Request, url: URL) => {
     const hotelId = url.searchParams.get("hotelId");
     const integrationId = url.searchParams.get("integrationId");
@@ -19,25 +19,14 @@ export const mainGetRequest: RequestType = {
       return getResponse(HttpStatusCode.BAD_REQUEST);
 
     const hotel = await System.hotels.getHotel({ hotelId });
-    if (!hotel || hotel.getObject().blocked)
-      return getResponse(HttpStatusCode.BAD_REQUEST);
+
+    if (!hotel) return getResponse(HttpStatusCode.BAD_REQUEST);
 
     const integration = hotel.getIntegration({ integrationId });
     if (!integration) return getResponse(HttpStatusCode.BAD_REQUEST);
 
-    const ownerAccount = await hotel.getOwner();
-    const hotelData = hotel.getObject();
-    const accounts = await hotel.getAccounts();
-    const integrationData = integration.getObject();
+    await integration.remove();
 
-    return getResponse(HttpStatusCode.OK, {
-      data: {
-        name: hotelData.name,
-        owner: ownerAccount.getObject().username,
-        accounts: accounts.length,
-        redirectUrl: integrationData.redirectUrl,
-        type: integrationData.type,
-      },
-    });
+    return getResponse(HttpStatusCode.OK);
   },
 };
