@@ -74,7 +74,7 @@ describe("2. register an account", () => {
       assertEquals(data, undefined);
       assertEquals(
         message,
-        "Password length cannot be more than 46 characters!",
+        "Password length cannot be more than 45 characters!",
       );
     });
     it("try to register with non matching passwords", async () => {

@@ -1,5 +1,5 @@
 import { ulid } from "jsr:@std/ulid@1";
-import { PEPPER_FILE } from "../consts/pepper.utils.ts";
+import { PEPPER_FILE } from "../consts/pepper.consts.ts";
 
 /**
  * Get pepper from filesystem, if not found, create it

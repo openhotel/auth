@@ -123,7 +123,7 @@ describe("5. recover account", () => {
       assertEquals(data, undefined);
       assertEquals(
         message,
-        "Password length cannot be more than 46 characters!",
+        "Password length cannot be more than 45 characters!",
       );
     });
     it("change password on valid token", async () => {
