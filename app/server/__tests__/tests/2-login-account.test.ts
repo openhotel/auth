@@ -17,7 +17,7 @@ describe("3. login an account", () => {
           password: USER_1.password,
         }),
       });
-      assertEquals(status, 403);
+      assertEquals(status, 400);
       assertEquals(data, undefined);
       assertEquals(message, "Email or password not valid!");
     });
@@ -30,7 +30,7 @@ describe("3. login an account", () => {
           password: INVALID_PASSWORD,
         }),
       });
-      assertEquals(status, 403);
+      assertEquals(status, 400);
       assertEquals(data, undefined);
       assertEquals(message, "Email or password not valid!");
     });
