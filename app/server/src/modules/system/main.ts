@@ -61,7 +61,7 @@ export const System = (() => {
 
     await Migrations.load($db);
 
-    await $db.visualize();
+    // await $db.visualize();
 
     await $email.load();
     if (isProduction) await $backups.load();
@@ -74,7 +74,15 @@ export const System = (() => {
 
   const getDbSecretKey = (): string => Deno.env.get("DB_SECRET_KEY") ?? "";
 
+  const stop = async () => {
+    await $backups.backup("_stop");
+    $backups.stop();
+    Deno.exit();
+  };
+
   return {
+    stop,
+
     load,
     getConfig,
     getEnvs,

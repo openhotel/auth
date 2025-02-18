@@ -4,11 +4,22 @@ import { walk } from "deno/fs/walk.ts";
 import * as s3 from "s3/client";
 
 export const backups = () => {
+  let abortCronController: AbortController = new AbortController();
+
   const load = async () => {
-    Deno.cron("Backup auth", System.getConfig().backups.cron, async () => {
-      await backup("_cron");
-      console.log("Backup ready!");
-    });
+    Deno.cron(
+      "Backup auth",
+      System.getConfig().backups.cron,
+      { signal: abortCronController.signal },
+      async () => {
+        await backup("_cron");
+        console.log("Backup ready!");
+      },
+    );
+  };
+
+  const stop = () => {
+    abortCronController.abort();
   };
 
   const backup = async (name: string) => System.db.backup(name);
@@ -71,6 +82,8 @@ export const backups = () => {
   };
 
   return {
+    stop,
+
     load,
     backup,
 
