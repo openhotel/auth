@@ -653,6 +653,7 @@ export const accounts = () => {
     const verifyUrl = `${rootUrl}/change-password?token=${verifyToken}`;
 
     if (email.enabled) {
+      // TODO: move check to .send
       console.debug("Sending email to", $email, "with url", verifyUrl);
       System.email.send(
         $email,
