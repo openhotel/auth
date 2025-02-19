@@ -22,7 +22,7 @@ export const apps = () => {
   const generate = async (
     url: string,
   ): Promise<{ id: string; token: string }> => {
-    const { token, id, tokenHash } = generateToken("tpa", 32, 64);
+    const { token, id, tokenHash } = generateToken("app", 32, 64);
     await System.db.set(["apps", id], {
       id,
       url,
