@@ -1,7 +1,7 @@
 import { useAdmin } from "shared/hooks";
 import React, { FormEvent, useCallback, useEffect, useState } from "react";
 //@ts-ignore
-import styles from "./tokens.module.scss";
+import styles from "./third-party.module.scss";
 import { ButtonComponent, InputComponent } from "@oh/components";
 
 export const AdminThirdPartComponent = () => {
