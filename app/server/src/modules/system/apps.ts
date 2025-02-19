@@ -4,7 +4,7 @@ import { generateToken, getTokenData } from "@oh/utils";
 
 export const apps = () => {
   const get = async (tokenId: string): Promise<{ id: string; url: string }> => {
-    const data = await System.db.get(["thirdPartyApps", tokenId]);
+    const data = await System.db.get(["apps", tokenId]);
 
     return data
       ? {
@@ -15,7 +15,7 @@ export const apps = () => {
   };
 
   const getList = async (): Promise<{ id: string; url: string }[]> =>
-    (await System.db.list({ prefix: ["thirdPartyApps"] })).map(
+    (await System.db.list({ prefix: ["apps"] })).map(
       ({ value }) => value,
     ) as any[];
 
@@ -23,7 +23,7 @@ export const apps = () => {
     url: string,
   ): Promise<{ id: string; token: string }> => {
     const { token, id, tokenHash } = generateToken("tpa", 32, 64);
-    await System.db.set(["thirdPartyApps", id], {
+    await System.db.set(["apps", id], {
       id,
       url,
       tokenHash,
@@ -37,7 +37,7 @@ export const apps = () => {
   };
 
   const remove = async (id: string) => {
-    await System.db.delete(["thirdPartyApps", id]);
+    await System.db.delete(["apps", id]);
   };
 
   const verify = async (rawToken: string): Promise<boolean> => {
@@ -46,7 +46,7 @@ export const apps = () => {
     const { id: tokenId, token } = getTokenData(rawToken);
     if (!tokenId || !token) return false;
 
-    const foundToken = await System.db.get(["thirdPartyApps", tokenId]);
+    const foundToken = await System.db.get(["apps", tokenId]);
     if (!foundToken) return false;
 
     return bcrypt.compareSync(token, foundToken.tokenHash);

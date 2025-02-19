@@ -7,7 +7,7 @@ import { ButtonComponent, InputComponent } from "@oh/components";
 export const AdminAppsComponent = () => {
   const { apps, addApp, removeApps, fetchApps } = useAdmin();
 
-  const [lastThirdPartyToken, setLastThirdPartyToken] = useState<string>(null);
+  const [lastApp, setLastApp] = useState<string>(null);
 
   const onSubmit = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {
@@ -19,9 +19,9 @@ export const AdminAppsComponent = () => {
       if (!url) return;
 
       const rawToken = await addApp(url);
-      setLastThirdPartyToken(rawToken);
+      setLastApp(rawToken);
     },
-    [setLastThirdPartyToken],
+    [setLastApp],
   );
 
   const onDelete = useCallback(
@@ -41,8 +41,8 @@ export const AdminAppsComponent = () => {
           <div className={styles.item} key={token.id}>
             <label>{token.url}</label>
             <label>{token.id}</label>
-            {lastThirdPartyToken && index === apps.length - 1 ? (
-              <label>{lastThirdPartyToken}</label>
+            {lastApp && index === apps.length - 1 ? (
+              <label>{lastApp}</label>
             ) : null}
             <ButtonComponent onClick={onDelete(token.id)}>
               delete

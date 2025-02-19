@@ -231,22 +231,22 @@ export const accounts = () => {
     }
   };
 
-  const verifyThirdPartyApp = async (
+  const verifyAppConnection = async (
     appToken: string,
     accountId: string,
     token: string,
   ): Promise<boolean> => {
     const { id: tokenId } = getTokenData(appToken);
 
-    const thirdPartyConnection = await System.db.get([
-      "thirdPartyAppConnection",
+    const appConnection = await System.db.get([
+      "appConnectionByAccount",
       accountId,
       tokenId,
     ]);
 
     return (
-      Boolean(thirdPartyConnection) &&
-      bcrypt.compareSync(token, thirdPartyConnection.hashedToken)
+      Boolean(appConnection) &&
+      bcrypt.compareSync(token, appConnection.hashedToken)
     );
   };
 
@@ -256,10 +256,10 @@ export const accounts = () => {
 
     const accountId = request.headers.get("account-id");
     const accountToken = request.headers.get("account-token");
-    const thirdAppToken = request.headers.get("app-token");
+    const appToken = request.headers.get("app-token");
     if (
-      thirdAppToken &&
-      !(await verifyThirdPartyApp(thirdAppToken, accountId, accountToken))
+      appToken &&
+      !(await verifyAppConnection(appToken, accountId, accountToken))
     )
       return null;
 
@@ -484,14 +484,14 @@ export const accounts = () => {
       });
     };
 
-    const addThirdPartyApp = async (appId: string): Promise<string | null> => {
+    const addApp = async (appId: string): Promise<string | null> => {
       const appData = await System.apps.get(appId);
       if (!appData) return null;
 
       const rawToken = getRandomString(32);
 
       await System.db.set(
-        ["thirdPartyAppConnection", account.accountId, appId],
+        ["appConnectionByAccount", account.accountId, appId],
         {
           hashedToken: bcrypt.hashSync(rawToken, bcrypt.genSaltSync(8)),
           createdAt: Date.now(),
@@ -656,7 +656,7 @@ export const accounts = () => {
 
       getEmail,
 
-      addThirdPartyApp,
+      addApp,
 
       isAdmin,
       setAdmin,

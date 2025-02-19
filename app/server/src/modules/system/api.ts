@@ -185,8 +185,8 @@ export const api = () => {
           const appToken = request.headers.get("app-token");
           return appToken && (await System.tokens.verify(appToken));
         case RequestKind.APPS:
-          const thirdAppToken = request.headers.get("app-token");
-          return thirdAppToken && (await System.apps.verify(thirdAppToken));
+          const $appToken = request.headers.get("app-token");
+          return $appToken && (await System.apps.verify($appToken));
         default:
           return false;
       }
