@@ -1,7 +1,10 @@
 import { AdminProvider, useUser } from "shared/hooks";
 import React from "react";
-import { AdminTokensComponent, AdminActionsComponent } from "./components";
-import { AdminThirdPartComponent } from "modules/admin/components/third-party/third-party.component";
+import {
+  AdminTokensComponent,
+  AdminActionsComponent,
+  AdminThirdPartyComponent,
+} from "./components";
 
 export const AdminComponent = () => {
   const { user } = useUser();
@@ -15,7 +18,7 @@ export const AdminComponent = () => {
         <hr />
         <AdminTokensComponent />
         <hr />
-        <AdminThirdPartComponent />
+        <AdminThirdPartyComponent />
         <hr />
         <AdminActionsComponent />
       </div>

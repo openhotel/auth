@@ -1,1 +1,1 @@
-export * from "./tokens.component";
+export * from "./third-party.component";

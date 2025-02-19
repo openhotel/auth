@@ -4,7 +4,7 @@ import React, { FormEvent, useCallback, useEffect, useState } from "react";
 import styles from "./third-party.module.scss";
 import { ButtonComponent, InputComponent } from "@oh/components";
 
-export const AdminThirdPartComponent = () => {
+export const AdminThirdPartyComponent = () => {
   const { thirdParty, addThirdParty, removeThirdParty, fetchThirdParty } =
     useAdmin();
 
