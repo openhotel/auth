@@ -184,11 +184,9 @@ export const api = () => {
         case RequestKind.TOKEN:
           const appToken = request.headers.get("app-token");
           return appToken && (await System.tokens.verify(appToken));
-        case RequestKind.THIRD_PARTY:
+        case RequestKind.APPS:
           const thirdAppToken = request.headers.get("app-token");
-          return (
-            thirdAppToken && (await System.thirdParty.verify(thirdAppToken))
-          );
+          return thirdAppToken && (await System.apps.verify(thirdAppToken));
         default:
           return false;
       }

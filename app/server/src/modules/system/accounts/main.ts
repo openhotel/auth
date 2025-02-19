@@ -231,11 +231,12 @@ export const accounts = () => {
     }
   };
 
-  const hasThirdPartyApp = async (
+  const verifyThirdPartyApp = async (
+    appToken: string,
     accountId: string,
-    thirdPartyToken: string,
-  ) => {
-    const { id: tokenId } = getTokenData(thirdPartyToken);
+    token: string,
+  ): Promise<boolean> => {
+    const { id: tokenId } = getTokenData(appToken);
 
     const thirdPartyConnection = await System.db.get([
       "thirdPartyAppConnection",
@@ -243,7 +244,10 @@ export const accounts = () => {
       tokenId,
     ]);
 
-    return Boolean(thirdPartyConnection);
+    return (
+      Boolean(thirdPartyConnection) &&
+      bcrypt.compareSync(token, thirdPartyConnection.hashedToken)
+    );
   };
 
   const getByRequest = async (request: Request) => {
@@ -251,8 +255,12 @@ export const accounts = () => {
     if (connectionToken) return getByConnectionToken(connectionToken);
 
     const accountId = request.headers.get("account-id");
+    const accountToken = request.headers.get("account-token");
     const thirdAppToken = request.headers.get("app-token");
-    if (thirdAppToken && !(await hasThirdPartyApp(accountId, thirdAppToken)))
+    if (
+      thirdAppToken &&
+      !(await verifyThirdPartyApp(thirdAppToken, accountId, accountToken))
+    )
       return null;
 
     if (accountId) return get(accountId);
@@ -476,15 +484,16 @@ export const accounts = () => {
       });
     };
 
-    const addThirdPartyApp = async (
-      thirdPartyTokenId: string,
-    ): Promise<string | null> => {
-      const thirdPartyData = await System.thirdParty.get(thirdPartyTokenId);
-      if (!thirdPartyData) return null;
+    const addThirdPartyApp = async (appId: string): Promise<string | null> => {
+      const appData = await System.apps.get(appId);
+      if (!appData) return null;
+
+      const rawToken = getRandomString(32);
 
       await System.db.set(
-        ["thirdPartyAppConnection", account.accountId, thirdPartyTokenId],
+        ["thirdPartyAppConnection", account.accountId, appId],
         {
+          hashedToken: bcrypt.hashSync(rawToken, bcrypt.genSaltSync(8)),
           createdAt: Date.now(),
           updatedAt: Date.now(),
         },
@@ -493,8 +502,8 @@ export const accounts = () => {
         },
       );
 
-      const targetUrl = new URL(thirdPartyData.url);
-      targetUrl.hash = `accountId=${account.accountId}`;
+      const targetUrl = new URL(appData.url);
+      targetUrl.hash = `accountId=${account.accountId}&accountToken=${rawToken}`;
       return targetUrl.href;
     };
 

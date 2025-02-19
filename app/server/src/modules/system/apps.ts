@@ -2,7 +2,7 @@ import { System } from "modules/system/main.ts";
 import * as bcrypt from "@da/bcrypt";
 import { generateToken, getTokenData } from "@oh/utils";
 
-export const thirdParty = () => {
+export const apps = () => {
   const get = async (tokenId: string): Promise<{ id: string; url: string }> => {
     const data = await System.db.get(["thirdPartyApps", tokenId]);
 
