@@ -94,11 +94,13 @@ export const accounts = () => {
         }
       : {};
 
-    const emailHash = await getEmailHash(email);
     // --- Email things
     {
+      const emailHash = await getEmailHash(email);
+
       await System.db.set(["accountsByEmail", emailHash], accountId, expire);
-      const encryptedEmail = await System.db.crypto.decryptSHA256(email);
+
+      const encryptedEmail = await System.db.crypto.encryptSHA256(email);
       await System.db.set(["emailsByHash", emailHash], encryptedEmail, expire);
     }
     // --- Username things ---
@@ -551,7 +553,9 @@ export const accounts = () => {
       if ($account.email?.length) {
         $account.email = $account.email.toLowerCase();
         const emailHash = await getEmailHash($account.email);
-        const encryptedEmail = await System.db.decryptSHA256($account.email);
+        const encryptedEmail = await System.db.crypto.encryptSHA256(
+          $account.email,
+        );
 
         await System.db.delete(["accountsByEmail", account.emailHash]);
         await System.db.delete(["emailsByHash", account.emailHash]);
@@ -736,7 +740,7 @@ export const accounts = () => {
       emailHash,
     ])) as string;
 
-    return await System.db.decryptSHA256(encryptedEmail);
+    return await System.db.crypto.decryptSHA256(encryptedEmail);
   };
 
   return {
