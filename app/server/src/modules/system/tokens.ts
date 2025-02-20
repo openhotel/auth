@@ -1,5 +1,4 @@
 import { System } from "modules/system/main.ts";
-import * as bcrypt from "@da/bcrypt";
 import { generateToken, getTokenData } from "@oh/utils";
 
 export const tokens = () => {
@@ -38,7 +37,7 @@ export const tokens = () => {
     const foundToken = await System.db.get(["appTokens", tokenId]);
     if (!foundToken) return false;
 
-    return bcrypt.compareSync(token, foundToken.tokenHash);
+    return System.db.crypto.comparePassword(token, foundToken.tokenHash);
   };
 
   return {
