@@ -1,7 +1,7 @@
-import { MailTemplate } from "../main.ts";
+import { MailTemplate, VerifyData } from "shared/types/main.ts";
 import { getBaseTemplate } from "./main.ts";
 
-export const verifyTemplate: MailTemplate = (data) => ({
+export const verifyTemplate: MailTemplate<VerifyData> = (data) => ({
   subject: "[OpenHotel] - 🔒Verify your account",
   text: `
     Please verify your account:\n\n${data.verifyUrl}

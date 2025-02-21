@@ -2,19 +2,13 @@ import { System } from "../main.ts";
 import nodemailer from "nodemailer";
 import { changePasswordTemplate, verifyTemplate } from "./templates/main.ts";
 import { getHiddenMail } from "shared/utils/mail.utils.ts";
+import {
+  MailDataMap,
+  MailTemplate,
+  MailTypes,
+} from "shared/types/mail.types.ts";
 
-export enum MailTypes {
-  VERIFY,
-  CHANGE_PASSWORD,
-}
-
-export type MailTemplate = (data: any) => {
-  subject: string;
-  text: string;
-  html: string;
-};
-
-const mailTemplates: Record<MailTypes, MailTemplate> = {
+const mailTemplates: { [K in MailTypes]: MailTemplate<MailDataMap[K]> } = {
   [MailTypes.VERIFY]: verifyTemplate,
   [MailTypes.CHANGE_PASSWORD]: changePasswordTemplate,
 };
@@ -44,7 +38,6 @@ export const email = () => {
       });
       const targetResolve = currentResolve ?? resolve;
       transporter.verify((error, success) => {
-        console.error(error);
         if (error) {
           console.error("Error loading email transporter!");
           $loadTransporter(targetResolve);
@@ -59,8 +52,12 @@ export const email = () => {
     await $loadTransporter();
   };
 
-  const send = async (mailType: MailTypes, to: string, data: any) => {
-    return new Promise<void>((resolve) => {
+  const send = async <T extends MailTypes>(
+    mailType: T,
+    to: string,
+    data: MailDataMap[T],
+  ) =>
+    new Promise<void>((resolve) => {
       const $send = async () => {
         const hiddenEmail = getHiddenMail(to);
         try {
@@ -70,7 +67,9 @@ export const email = () => {
 
           if (!enabled) return resolve();
 
-          const template = mailTemplates[mailType];
+          const template = mailTemplates[mailType] as MailTemplate<
+            MailDataMap[T]
+          >;
           if (!template) {
             console.error(
               `Email error to ${hiddenEmail}, template ${mailType} not found`,
@@ -104,7 +103,6 @@ export const email = () => {
       };
       $send();
     });
-  };
 
   return {
     load,

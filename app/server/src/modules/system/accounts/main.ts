@@ -26,8 +26,8 @@ import { connections } from "./connections/main.ts";
 import { ulid } from "@std/ulid";
 import { getUserAgentData } from "shared/utils/user-agent.utils.ts";
 import { discordNotify } from "shared/utils/discord.utils.ts";
-import { MailTypes } from "../email/main.ts";
 import { getHiddenMail } from "shared/utils/mail.utils.ts";
+import { MailTypes } from "shared/types/mail.types.ts";
 
 export const accounts = () => {
   const $admins = admins();
@@ -694,11 +694,11 @@ export const accounts = () => {
     )
       return HttpStatusCode.TOO_MANY_REQUESTS;
 
-    const verifyUrl = `${rootUrl}/change-password?token=${verifyToken}`;
+    const resetUrl = `${rootUrl}/change-password?token=${verifyToken}`;
 
     const hiddenMail = getHiddenMail($email);
-    console.debug("Sending email to", hiddenMail, "with url", verifyUrl);
-    System.email.send(MailTypes.CHANGE_PASSWORD, $email, { verifyUrl });
+    console.debug("Sending email to", hiddenMail, "with url", resetUrl);
+    System.email.send(MailTypes.CHANGE_PASSWORD, $email, { resetUrl });
 
     const expireIn = 60 * 60 * 1000; /* 1h */
 
@@ -719,7 +719,7 @@ export const accounts = () => {
       },
     );
 
-    return verifyUrl;
+    return resetUrl;
   };
 
   const getEmailHash = async (email: string): Promise<string> =>
