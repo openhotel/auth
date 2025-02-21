@@ -1,9 +1,11 @@
 import { System } from "../main.ts";
 import nodemailer from "nodemailer";
-import { verifyTemplate } from "./templates/verify.template.ts";
+import { changePasswordTemplate, verifyTemplate } from "./templates/main.ts";
+import { getHiddenMail } from "shared/utils/mail.utils.ts";
 
-enum MailTypes {
+export enum MailTypes {
   VERIFY,
+  CHANGE_PASSWORD,
 }
 
 export type MailTemplate = (data: any) => {
@@ -14,6 +16,7 @@ export type MailTemplate = (data: any) => {
 
 const mailTemplates: Record<MailTypes, MailTemplate> = {
   [MailTypes.VERIFY]: verifyTemplate,
+  [MailTypes.CHANGE_PASSWORD]: changePasswordTemplate,
 };
 
 export const email = () => {
@@ -54,29 +57,12 @@ export const email = () => {
 
   const load = async () => {
     await $loadTransporter();
-
-    const template = mailTemplates[MailTypes.VERIFY]({
-      verifyUrl: "https://openhotel.club/blablabla",
-    });
-    System.email.send(
-      "alberto.quil3s@gmail.com",
-      template.subject,
-      template.text,
-      template.html,
-    );
   };
 
-  // TODO: se podria hacer con __()...
-
-  const send2 = async (
-    mailType: MailTypes,
-    to: string,
-    data: any,
-    lang: any, // Idioma por defecto
-  ) => {
+  const send = async (mailType: MailTypes, to: string, data: any) => {
     return new Promise<void>((resolve) => {
       const $send = async () => {
-        const hiddenEmail = `${to.substring(0, 3)}***${to.substring(to.length - 3)}`;
+        const hiddenEmail = getHiddenMail(to);
         try {
           const {
             email: { enabled, username },
@@ -86,22 +72,22 @@ export const email = () => {
 
           const template = mailTemplates[mailType];
           if (!template) {
-            console.error(`No se encontró template para el tipo ${mailType}`);
+            console.error(
+              `Email error to ${hiddenEmail}, template ${mailType} not found`,
+            );
             return resolve();
           }
 
-          const subject = template.subject(data);
-          const text = template.text(data);
-          const html = template.html(data);
+          const mail = template(data);
 
           await new Promise<void>((resolveMail, rejectMail) => {
             transporter.sendMail(
               {
                 from: username,
                 to,
-                subject,
-                text,
-                html,
+                subject: mail.subject,
+                text: mail.text,
+                html: mail.html,
               },
               (error: any, info: any) => {
                 error ? rejectMail(error) : resolveMail();
@@ -109,48 +95,8 @@ export const email = () => {
             );
           });
 
-          console.log(`Email enviado a ${hiddenEmail}!`);
-          resolve();
-        } catch (e) {
-          console.error(`Error enviando email a ${hiddenEmail}:`, e);
-          setTimeout($send, 5_000);
-        }
-      };
-      $send();
-    });
-  };
-
-  const send = async (
-    to: string,
-    subject: string,
-    content: string,
-    html: string,
-  ) =>
-    new Promise<void>((resolve) => {
-      const $send = async () => {
-        const hiddenEmail = `${to.substring(0, 3)}***${to.substring(to.length - 3, to.length)}`;
-        try {
-          const {
-            email: { enabled, username },
-          } = System.getConfig();
-          if (!enabled) return resolve();
-
-          await new Promise<void>((resolve, reject) => {
-            transporter.sendMail(
-              {
-                from: username,
-                to,
-                subject: subject,
-                text: content,
-                html,
-              },
-              (error, info) => {
-                error ? reject() : resolve();
-              },
-            );
-          });
-          resolve();
           console.log(`Email sent to ${hiddenEmail}!`);
+          resolve();
         } catch (e) {
           console.error(`Email error to ${hiddenEmail}!`);
           setTimeout($send, 5_000);
@@ -158,6 +104,7 @@ export const email = () => {
       };
       $send();
     });
+  };
 
   return {
     load,

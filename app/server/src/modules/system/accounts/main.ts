@@ -1,21 +1,21 @@
 import { System } from "modules/system/main.ts";
 import {
-  DbAccount,
   AccountCreation,
   AccountMutable,
   AccountMutableGet,
-  PublicAccount,
   AccountUpdate,
+  DbAccount,
+  PublicAccount,
 } from "shared/types/account.types.ts";
 import {
-  getRandomString,
-  getIpFromRequest,
-  HttpStatusCode,
   compareIps,
-  getTokenData,
-  getSHA256HashText,
-  encryptToken,
   compareToken,
+  encryptToken,
+  getIpFromRequest,
+  getRandomString,
+  getSHA256HashText,
+  getTokenData,
+  HttpStatusCode,
 } from "@oh/utils";
 import { otp } from "./otp.ts";
 import { github } from "./github.ts";
@@ -26,6 +26,8 @@ import { connections } from "./connections/main.ts";
 import { ulid } from "@std/ulid";
 import { getUserAgentData } from "shared/utils/user-agent.utils.ts";
 import { discordNotify } from "shared/utils/discord.utils.ts";
+import { MailTypes } from "../email/main.ts";
+import { getHiddenMail } from "shared/utils/mail.utils.ts";
 
 export const accounts = () => {
   const $admins = admins();
@@ -126,12 +128,7 @@ export const accounts = () => {
 
       const verifyUrl = `${apiUrl}/verify?id=${verifyId}&token=${verifyToken}`;
 
-      System.email.send(
-        email,
-        "verify your account",
-        verifyUrl,
-        `<a href="${verifyUrl}">${verifyUrl}<p/>`,
-      );
+      System.email.send(MailTypes.VERIFY, email, { verifyUrl });
     }
   };
 
@@ -687,7 +684,7 @@ export const accounts = () => {
     const accountData = account.getObject();
 
     const verifyToken = getRandomString(16);
-    const { url: rootUrl, email, version } = System.getConfig();
+    const { url: rootUrl, version } = System.getConfig();
 
     const isDevelopment = version === "development";
 
@@ -699,16 +696,9 @@ export const accounts = () => {
 
     const verifyUrl = `${rootUrl}/change-password?token=${verifyToken}`;
 
-    if (email.enabled) {
-      // TODO: move check to .send
-      console.debug("Sending email to", $email, "with url", verifyUrl);
-      System.email.send(
-        $email,
-        "Change your account password",
-        verifyUrl,
-        `<a href="${verifyUrl}">${verifyUrl}<p/>`,
-      );
-    }
+    const hiddenMail = getHiddenMail($email);
+    console.debug("Sending email to", hiddenMail, "with url", verifyUrl);
+    System.email.send(MailTypes.CHANGE_PASSWORD, $email, { verifyUrl });
 
     const expireIn = 60 * 60 * 1000; /* 1h */
 
