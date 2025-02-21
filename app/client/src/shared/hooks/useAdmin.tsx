@@ -1,15 +1,12 @@
 import React, { ReactNode, useCallback, useContext, useState } from "react";
 import { useApi } from "shared/hooks/useApi";
 import { useAccount } from "shared/hooks/useAccount";
-import { Backup, DbHotel, Token, User } from "shared/types";
+import { Backup, DbHotel, AppToken, Token, User } from "shared/types";
 import { RequestMethod } from "shared/enums";
 
 type AdminState = {
   users: User[];
   fetchUsers: () => Promise<void>;
-
-  tokens: Token[];
-  fetchTokens: () => Promise<void>;
 
   hotels: DbHotel[];
   fetchHotels: () => Promise<void>;
@@ -23,11 +20,15 @@ type AdminState = {
   ) => Promise<void>;
   deleteHotel: (hotelId: string) => Promise<void>;
 
-  backups: Backup[];
-  fetchBackups: () => Promise<void>;
-
+  tokens: Token[];
+  fetchTokens: () => Promise<void>;
   addToken: (label: string) => Promise<string>;
   removeToken: (id: string) => Promise<void>;
+
+  apps: AppToken[];
+  fetchApps: () => Promise<void>;
+  addApp: (url: string) => Promise<string>;
+  removeApps: (id: string) => Promise<void>;
 
   update: () => Promise<void>;
 
@@ -35,10 +36,11 @@ type AdminState = {
   deleteUser: (user: User) => Promise<void>;
   resendVerificationUser: (accountId: string) => Promise<void>;
 
+  backups: Backup[];
+  fetchBackups: () => Promise<void>;
   backup: (name: string) => Promise<void>;
   deleteBackup: (name: string) => Promise<void>;
-  syncBackups: () => Promise<void>;
-  sync: boolean | null;
+  downloadBackup: (name: string) => Promise<void>;
 };
 
 const AdminContext = React.createContext<AdminState>(undefined);
@@ -55,9 +57,9 @@ export const AdminProvider: React.FunctionComponent<ProviderProps> = ({
 
   const [users, setUsers] = useState<User[]>([]);
   const [tokens, setTokens] = useState<Token[]>([]);
+  const [apps, setApps] = useState<AppToken[]>([]);
   const [hotels, setHotels] = useState<DbHotel[]>([]);
   const [backups, setBackups] = useState<Backup[]>([]);
-  const [sync, setSync] = useState<boolean | null>(false);
 
   const fetchUsers = useCallback(async () => {
     return fetch({
@@ -139,10 +141,54 @@ export const AdminProvider: React.FunctionComponent<ProviderProps> = ({
     async (id: string): Promise<void> => {
       await fetch({
         method: RequestMethod.DELETE,
-        pathname: `/admin/tokens?id=${id}`,
+        pathname: `/admin/apps?id=${id}`,
         headers: getAccountHeaders(),
       });
-      setTokens((tokens) => tokens.filter((token) => token.id !== id));
+      setApps((tokens) => tokens.filter((token) => token.id !== id));
+    },
+    [fetch, getAccountHeaders, setApps],
+  );
+
+  const fetchApps = useCallback(async () => {
+    return fetch({
+      method: RequestMethod.GET,
+      pathname: "/admin/apps",
+      headers: getAccountHeaders(),
+    }).then((response) => setApps(response.data.tokens));
+  }, [fetch, getAccountHeaders]);
+
+  const addApp = useCallback(
+    async (url: string): Promise<string> => {
+      const { id, token } = (
+        await fetch({
+          method: RequestMethod.POST,
+          pathname: "/admin/apps",
+          headers: getAccountHeaders(),
+          body: {
+            url,
+          },
+        })
+      ).data;
+      setApps((tokens) => [
+        ...tokens,
+        {
+          id,
+          url,
+        },
+      ]);
+      return token;
+    },
+    [fetch, getAccountHeaders, setApps],
+  );
+
+  const removeApps = useCallback(
+    async (id: string): Promise<void> => {
+      await fetch({
+        method: RequestMethod.DELETE,
+        pathname: `/admin/apps?id=${id}`,
+        headers: getAccountHeaders(),
+      });
+      setApps((tokens) => tokens.filter((token) => token.id !== id));
     },
     [fetch, getAccountHeaders, setTokens],
   );
@@ -208,13 +254,20 @@ export const AdminProvider: React.FunctionComponent<ProviderProps> = ({
       method: RequestMethod.GET,
       pathname: "/admin/backups",
       headers: getAccountHeaders(),
-    }).then((response) => setBackups(response.data.backups));
+    }).then((response) =>
+      setBackups(
+        response.data.backups.map((data) => ({
+          ...data,
+          id: data.name.substring(0, 26),
+        })),
+      ),
+    );
   }, [fetch, getAccountHeaders, setBackups]);
 
   const backup = useCallback(async (name: string) => {
     await fetch({
       method: RequestMethod.POST,
-      pathname: "/admin/backups",
+      pathname: "/admin/backup",
       headers: getAccountHeaders(),
       body: {
         name,
@@ -226,7 +279,7 @@ export const AdminProvider: React.FunctionComponent<ProviderProps> = ({
   const deleteBackup = useCallback(async (name: string) => {
     await fetch({
       method: RequestMethod.DELETE,
-      pathname: "/admin/backups",
+      pathname: "/admin/backup",
       headers: getAccountHeaders(),
       body: {
         name,
@@ -235,16 +288,24 @@ export const AdminProvider: React.FunctionComponent<ProviderProps> = ({
     await fetchBackups();
   }, []);
 
-  const syncBackups = useCallback(async () => {
-    setSync(true);
-    await fetch({
+  const downloadBackup = useCallback(async (name: string) => {
+    const response = await fetch({
       method: RequestMethod.GET,
-      pathname: "/admin/backups/sync",
+      pathname: `/admin/backup?name=${name}`,
       headers: getAccountHeaders(),
-    })
-      .then(() => setSync(false))
-      .catch(() => setSync(null));
-  }, [setSync]);
+      rawResponse: true,
+    });
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  }, []);
 
   return (
     <AdminContext.Provider
@@ -256,25 +317,29 @@ export const AdminProvider: React.FunctionComponent<ProviderProps> = ({
         deleteUser,
         resendVerificationUser,
 
-        tokens,
-        fetchTokens,
-
         hotels,
         fetchHotels,
         updateHotel,
         deleteHotelIntegration,
         deleteHotel,
 
+        tokens,
+        fetchTokens,
         addToken,
         removeToken,
+
+        apps,
+        fetchApps,
+        addApp,
+        removeApps,
+
         update,
 
         fetchBackups,
         backups,
         backup,
         deleteBackup,
-        syncBackups,
-        sync,
+        downloadBackup,
       }}
       children={children}
     />

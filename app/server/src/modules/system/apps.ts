@@ -1,19 +1,30 @@
 import { System } from "modules/system/main.ts";
 import { generateToken, getTokenData, compareToken } from "@oh/utils";
 
-export const tokens = () => {
-  const getList = async (): Promise<{ id: string; label: string }[]> =>
-    (await System.db.list({ prefix: ["appTokens"] })).map(
+export const apps = () => {
+  const get = async (tokenId: string): Promise<{ id: string; url: string }> => {
+    const data = await System.db.get(["apps", tokenId]);
+
+    return data
+      ? {
+          id: data.id,
+          url: data.url,
+        }
+      : null;
+  };
+
+  const getList = async (): Promise<{ id: string; url: string }[]> =>
+    (await System.db.list({ prefix: ["apps"] })).map(
       ({ value }) => value,
     ) as any[];
 
   const generate = async (
-    label: string,
+    url: string,
   ): Promise<{ id: string; token: string }> => {
-    const { token, id, tokenHash } = generateToken("tok", 8, 96);
-    await System.db.set(["appTokens", id], {
+    const { token, id, tokenHash } = generateToken("app", 32, 64);
+    await System.db.set(["apps", id], {
       id,
-      label,
+      url,
       tokenHash,
       updatedAt: Date.now(),
     });
@@ -25,7 +36,7 @@ export const tokens = () => {
   };
 
   const remove = async (id: string) => {
-    await System.db.delete(["appTokens", id]);
+    await System.db.delete(["apps", id]);
   };
 
   const verify = async (rawToken: string): Promise<boolean> => {
@@ -34,13 +45,14 @@ export const tokens = () => {
     const { id: tokenId, token } = getTokenData(rawToken);
     if (!tokenId || !token) return false;
 
-    const foundToken = await System.db.get(["appTokens", tokenId]);
+    const foundToken = await System.db.get(["apps", tokenId]);
     if (!foundToken) return false;
 
     return compareToken(token, foundToken.tokenHash);
   };
 
   return {
+    get,
     getList,
     generate,
     verify,

@@ -11,6 +11,8 @@ type UserState = {
   getLicense: () => Promise<string>;
   refresh: () => Promise<void>;
 
+  addApp: (appId: string) => Promise<string | null>;
+
   update: (data: { languages: string[] }) => void;
 
   clear: () => void;
@@ -78,6 +80,18 @@ export const UserProvider: React.FunctionComponent<ProviderProps> = ({
     [fetchUser, navigate, getAccountHeaders],
   );
 
+  const addApp = useCallback(
+    async (appId: string) => {
+      return await fetch({
+        method: RequestMethod.GET,
+        pathname: `/user/@me/apps?appId=${appId}`,
+        headers: getAccountHeaders(),
+        cache: false,
+      }).then((response) => response?.data?.url ?? null);
+    },
+    [getAccountHeaders],
+  );
+
   const clear = useCallback(() => {
     setUser(null);
   }, [setUser]);
@@ -89,6 +103,8 @@ export const UserProvider: React.FunctionComponent<ProviderProps> = ({
         getLicense,
 
         refresh,
+
+        addApp,
 
         update,
 

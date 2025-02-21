@@ -10,12 +10,17 @@ import { usersGetRequest } from "./users.request.ts";
 import { userDeleteRequest, userPatchRequest } from "./user.request.ts";
 import { userResendVerificationRequest } from "./user-resend-verification.request.ts";
 import {
-  backupsDeleteRequest,
+  backupDeleteRequest,
+  backupGetRequest,
+  backupPostRequest,
   backupsGetRequest,
-  backupsPostRequest,
-  backupsSyncGetRequest,
-} from "./backups.request.ts";
+} from "./backup.request.ts";
 import { hotelRequestList } from "./hotel/main.ts";
+import {
+  appsDeleteRequest,
+  appsGetRequest,
+  appsPostRequest,
+} from "./apps.request.ts";
 
 export const adminRequestList: RequestType[] = getPathRequestList({
   requestList: [
@@ -26,6 +31,10 @@ export const adminRequestList: RequestType[] = getPathRequestList({
     tokensGetRequest,
     tokensPostRequest,
     //
+    appsDeleteRequest,
+    appsGetRequest,
+    appsPostRequest,
+    //
     usersGetRequest,
     userDeleteRequest,
     userPatchRequest,
@@ -34,9 +43,9 @@ export const adminRequestList: RequestType[] = getPathRequestList({
     ...hotelRequestList,
     //
     backupsGetRequest,
-    backupsPostRequest,
-    backupsDeleteRequest,
-    backupsSyncGetRequest,
+    backupGetRequest,
+    backupPostRequest,
+    backupDeleteRequest,
   ],
   pathname: "/admin",
 });
