@@ -25,7 +25,11 @@ import { hotels } from "./hotels.ts";
 import { connections } from "./connections/main.ts";
 import { ulid } from "@std/ulid";
 import { getUserAgentData } from "shared/utils/user-agent.utils.ts";
-import {discordNotify, getRandomDiscordMessage, getRandomMessage} from "shared/utils/discord.utils.ts";
+import {
+  discordNotify,
+  getRandomDiscordMessage,
+  getRandomMessage,
+} from "shared/utils/discord.utils.ts";
 import { getHiddenMail } from "shared/utils/mail.utils.ts";
 import { MailTypes } from "shared/types/mail.types.ts";
 
@@ -466,7 +470,7 @@ export const accounts = () => {
         (account) => account.verified,
       );
       discordNotify({
-        content: getRandomDiscordMessage(account.username, accountsList.length)
+        content: getRandomDiscordMessage(account.username, accountsList.length),
       });
     };
 
