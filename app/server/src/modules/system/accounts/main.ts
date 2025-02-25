@@ -307,6 +307,7 @@ export const accounts = () => {
 
       const userAgent = request.headers.get("user-agent");
       const ip = getIpFromRequest(request);
+      const fingerprint = request.headers.get("fingerprint");
 
       const {
         times: { accountTokenDays, accountRefreshTokenDays },
@@ -320,6 +321,7 @@ export const accounts = () => {
         {
           userAgent,
           ip,
+          fingerprint,
           tokenHash: encryptToken(token),
           updatedAt: Date.now(),
         },
@@ -332,6 +334,7 @@ export const accounts = () => {
         {
           userAgent,
           ip,
+          fingerprint,
           refreshTokenHash: encryptToken(refreshToken),
           updatedAt: Date.now(),
         },
@@ -412,14 +415,9 @@ export const accounts = () => {
         tokenId,
       ]);
 
-      const userAgent = request.headers.get("user-agent");
-      const ip = getIpFromRequest(request);
+      const fingerprint = request.headers.get("fingerprint");
 
-      if (
-        !accountsByToken ||
-        accountsByToken.userAgent !== userAgent ||
-        !compareIps(ip, accountsByToken.ip)
-      )
+      if (!accountsByToken || accountsByToken.fingerprint !== fingerprint)
         return false;
 
       return compareToken(token, accountsByToken.tokenHash);
@@ -438,13 +436,11 @@ export const accounts = () => {
         tokenId,
       ]);
 
-      const userAgent = request.headers.get("user-agent");
-      const ip = getIpFromRequest(request);
+      const fingerprint = request.headers.get("fingerprint");
 
       if (
         !accountByRefreshToken ||
-        accountByRefreshToken.userAgent !== userAgent ||
-        !compareIps(ip, accountByRefreshToken.ip)
+        accountByRefreshToken.fingerprint !== fingerprint
       )
         return false;
 
