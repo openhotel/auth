@@ -28,7 +28,6 @@ import { getUserAgentData } from "shared/utils/user-agent.utils.ts";
 import {
   discordNotify,
   getRandomDiscordMessage,
-  getRandomMessage,
 } from "shared/utils/discord.utils.ts";
 import { getHiddenMail } from "shared/utils/mail.utils.ts";
 import { MailTypes } from "shared/types/mail.types.ts";
