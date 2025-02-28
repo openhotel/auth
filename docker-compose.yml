@@ -9,8 +9,7 @@ services:
       - ./app/server:/app/server
     ports:
       - "20240:20240"
-    networks:
-      - auth
+    network_mode: host
 
   client:
     container_name: auth-client
@@ -22,9 +21,4 @@ services:
       - ./app/client:/app/client
     ports:
       - "2024:2024"
-    networks:
-      - auth
-
-networks:
-  auth:
-    name: auth-network
+    network_mode: host
