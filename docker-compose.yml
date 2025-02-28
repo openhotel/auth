@@ -1,0 +1,30 @@
+services:
+  server:
+    container_name: auth-server
+    restart: always
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.server
+    volumes:
+      - ./app/server:/app/server
+    ports:
+      - "20240:20240"
+    networks:
+      - auth
+
+  client:
+    container_name: auth-client
+    restart: always
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.client
+    volumes:
+      - ./app/client:/app/client
+    ports:
+      - "2024:2024"
+    networks:
+      - auth
+
+networks:
+  auth:
+    name: auth-network
