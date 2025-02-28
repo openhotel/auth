@@ -4,7 +4,7 @@ services:
     restart: always
     build:
       context: .
-      dockerfile: ./docker/Dockerfile.server
+      dockerfile: ./.docker/Dockerfile.server
     volumes:
       - ./app/server:/app/server
     ports:
@@ -17,7 +17,7 @@ services:
     restart: always
     build:
       context: .
-      dockerfile: ./docker/Dockerfile.client
+      dockerfile: ./.docker/Dockerfile.client
     volumes:
       - ./app/client:/app/client
     ports:
