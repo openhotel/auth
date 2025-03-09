@@ -11,6 +11,7 @@ import { recoverPasswordPostRequest } from "./recover-password.request.ts";
 import { changePasswordPostRequest } from "./change-password.request.ts";
 import { accountDeleteRequest } from "./main.request.ts";
 import { tokenGetRequest, tokenDeleteRequest } from "./token.request.ts";
+import { captchaRequest } from "./captcha.request.ts";
 
 export const accountRequestList: RequestType[] = getPathRequestList({
   requestList: [
@@ -26,6 +27,8 @@ export const accountRequestList: RequestType[] = getPathRequestList({
 
     tokenGetRequest,
     tokenDeleteRequest,
+
+    captchaRequest,
 
     ...otpRequestList,
     ...miscRequestList,
