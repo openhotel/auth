@@ -14,7 +14,6 @@ export const LoginComponent: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string>();
   const [captchaId, setCaptchaId] = useState<string>(null);
   const [showOTP, setShowOTP] = useState<boolean>(false);
-  const [showCaptcha, setShowCaptcha] = useState<boolean>(false);
 
   const { login, isLogged } = useAccount();
   const navigate = useNavigate();
@@ -33,7 +32,6 @@ export const LoginComponent: React.FC = () => {
           navigate("/");
         })
         .catch(({ status, message }) => {
-          if (status === 461 || status === 451) setShowCaptcha(true);
           if (status === 461 || status === 441) setShowOTP(true);
           setSubmittedAt(performance.now());
           setErrorMessage(message);
@@ -58,13 +56,7 @@ export const LoginComponent: React.FC = () => {
           type="password"
           autoComplete="current-password"
         />
-
-        {showCaptcha && (
-          <CaptchaComponent
-            submittedAt={submittedAt}
-            onResolve={setCaptchaId}
-          />
-        )}
+        <CaptchaComponent submittedAt={submittedAt} onResolve={setCaptchaId} />
         {showOTP && (
           <InputComponent
             name="otpToken"
