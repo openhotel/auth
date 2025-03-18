@@ -83,10 +83,9 @@ export const HotelComponent: React.FC<Props> = ({
   );
 
   const onConfirmRemove = useCallback(async () => {
-    await remove(hotel.hotelId);
-    refresh();
-    close();
-  }, [hotel, remove, refresh, close]);
+      await remove(hotel.hotelId);
+      refresh();
+  }, [hotel, remove, refresh]);
 
   const onOpenModal = useCallback(() => {
     open({
