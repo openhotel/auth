@@ -79,7 +79,7 @@ export const RegisterComponent: React.FC = () => {
 
   return success ? (
     <div className={styles.success}>
-      <h2>Registration Successful</h2>
+      <h1>Registration Successful</h1>
       <div>
         <p>Congratulations! You can now login to your account.</p>
         <p className={styles.warning}>
