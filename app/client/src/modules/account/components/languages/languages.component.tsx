@@ -22,7 +22,7 @@ export const LanguagesComponent: React.FC = () => {
   const languageOptions = useMemo(
     () =>
       languages
-        .filter((language) => !user.languages.includes(language))
+        .filter((language) => !user.languages.includes(language.code))
         .map((language) => ({ key: language.code, value: language.name })),
     [languages, user],
   );
@@ -43,17 +43,22 @@ export const LanguagesComponent: React.FC = () => {
     [update, user],
   );
 
+  const userLanguages = useMemo(() => {
+    return user.languages.map((code) => ({
+      code,
+      name: languages.find((lang) => lang.code === code)?.name,
+    }));
+  }, [user.languages, languages]);
+
   return (
     <div className={styles.content}>
       <label>Languages:</label>
       <div className={styles.list}>
-        {user.languages.map((languageCode, index) => (
-          <div key={languageCode} className={cn(styles.item, styles.nonForm)}>
-            <label>
-              {languages.find((lang) => lang.code === languageCode).name}
-            </label>
+        {userLanguages.map(({ code, name }, index) => (
+          <div key={code} className={cn(styles.item, styles.nonForm)}>
+            <label>{name}</label>
             {user.languages.length > 1 ? (
-              <ButtonComponent color="grey" onClick={onDelete(languageCode)}>
+              <ButtonComponent color="grey" onClick={onDelete(code)}>
                 Remove
               </ButtonComponent>
             ) : null}
