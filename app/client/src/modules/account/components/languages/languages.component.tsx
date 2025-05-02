@@ -23,7 +23,7 @@ export const LanguagesComponent: React.FC = () => {
     () =>
       languages
         .filter((language) => !user.languages.includes(language))
-        .map((language) => ({ key: language, value: language })),
+        .map((language) => ({ key: language.code, value: language.name })),
     [languages, user],
   );
 
@@ -47,11 +47,13 @@ export const LanguagesComponent: React.FC = () => {
     <div className={styles.content}>
       <label>Languages:</label>
       <div className={styles.list}>
-        {user.languages.map((language, index) => (
-          <div key={language} className={cn(styles.item, styles.nonForm)}>
-            <label>{language}</label>
+        {user.languages.map((languageCode, index) => (
+          <div key={languageCode} className={cn(styles.item, styles.nonForm)}>
+            <label>
+              {languages.find((lang) => lang.code === languageCode).name}
+            </label>
             {user.languages.length > 1 ? (
-              <ButtonComponent color="grey" onClick={onDelete(language)}>
+              <ButtonComponent color="grey" onClick={onDelete(languageCode)}>
                 Remove
               </ButtonComponent>
             ) : null}
