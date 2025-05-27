@@ -1,9 +1,5 @@
-import React, { FormEvent, useCallback, useState } from "react";
-import {
-  CaptchaComponent,
-  LinkComponent,
-  RedirectComponent,
-} from "shared/components";
+import React, { FormEvent, useCallback, useEffect, useState } from "react";
+import { CaptchaComponent, LinkComponent } from "shared/components";
 import { useAccount } from "shared/hooks";
 import styles from "./login.module.scss";
 import { useNavigate } from "react-router-dom";
@@ -28,24 +24,29 @@ export const LoginComponent: React.FC = () => {
       const password = data.get("password") as string;
       const otpToken = data.get("otpToken") as string;
 
-      login({ email, password, captchaId, otpToken })
-        .then(() => {
-          navigate("/");
-        })
-        .catch(({ status, message }) => {
+      login({ email, password, captchaId, otpToken }).catch(
+        ({ status, message }) => {
           if (status === 461 || status === 451) setShowCaptcha(true);
           if (status === 461 || status === 441) setShowOTP(true);
           setSubmittedAt(performance.now());
           setErrorMessage(message);
           if (status === 500)
             setErrorMessage("Internal server error: " + message);
-        });
+        },
+      );
     },
     [captchaId, navigate, setSubmittedAt, setErrorMessage],
   );
 
+  useEffect(() => {
+    if (!isLogged) return;
+
+    const url = new URLSearchParams(window.location.search).get("redirectTo");
+    if (url) window.location.replace(decodeURIComponent(url));
+    else navigate("/");
+  }, [isLogged, navigate]);
+
   if (isLogged === null) return <div>Loading...</div>;
-  if (isLogged) return <RedirectComponent to="/" />;
 
   return (
     <div className={styles.wrapper}>
