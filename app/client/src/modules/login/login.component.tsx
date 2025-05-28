@@ -1,9 +1,11 @@
 import React, { FormEvent, useCallback, useEffect, useState } from "react";
 import { CaptchaComponent, LinkComponent } from "shared/components";
-import { useAccount } from "shared/hooks";
-import styles from "./login.module.scss";
+import { useAccount, useHotel } from "shared/hooks";
 import { useNavigate } from "react-router-dom";
 import { ButtonComponent, InputComponent } from "@openhotel/web-components";
+
+//@ts-ignore
+import styles from "./login.module.scss";
 
 export const LoginComponent: React.FC = () => {
   const [submittedAt, setSubmittedAt] = useState<number>();
@@ -13,6 +15,7 @@ export const LoginComponent: React.FC = () => {
   const [showCaptcha, setShowCaptcha] = useState<boolean>(false);
 
   const { login, isLogged } = useAccount();
+  const { get } = useHotel();
   const navigate = useNavigate();
 
   const onSubmit = useCallback(
@@ -41,10 +44,25 @@ export const LoginComponent: React.FC = () => {
   useEffect(() => {
     if (!isLogged) return;
 
-    const url = new URLSearchParams(window.location.search).get("redirectTo");
-    if (url) window.location.replace(decodeURIComponent(url));
-    else navigate("/");
-  }, [isLogged, navigate]);
+    const redirectData = new URLSearchParams(window.location.search).get(
+      "redirect",
+    );
+    if (redirectData) {
+      const { type, ...data } = JSON.parse(atob(redirectData));
+      switch (type) {
+        case "integration":
+          get(data.hotelId, data.integrationId)
+            .then(({ redirectUrl }) => {
+              window.location.replace(redirectUrl);
+            })
+            .catch(() => navigate("/"));
+          break;
+        case "app":
+          navigate(`/apps?appId=${data.appId}`);
+          break;
+      }
+    } else navigate("/");
+  }, [isLogged, navigate, get]);
 
   if (isLogged === null) return <div>Loading...</div>;
 

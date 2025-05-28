@@ -26,7 +26,12 @@ export const AppsComponent: React.FC = () => {
   }, [isLogged, addApp]);
 
   if (!appId) return <RedirectComponent to="/" />;
-  if (isLogged !== null && !isLogged) return <RedirectComponent to="/login" />;
+  if (isLogged !== null && !isLogged)
+    return (
+      <RedirectComponent
+        to={`/login?redirect=${btoa(JSON.stringify({ type: "app", appId }))}`}
+      />
+    );
 
   return <div>Thinking...</div>;
 };

@@ -61,7 +61,7 @@ export const ConnectionComponent: React.FC = () => {
   if (isLogged === false)
     return (
       <RedirectComponent
-        to={`/login?redirectTo=${encodeURIComponent(window.location.href)}`}
+        to={`/login?redirect=${btoa(JSON.stringify({ type: "integration", hotelId, integrationId }))}`}
       />
     );
   if (isLogged === null || connection === undefined)
