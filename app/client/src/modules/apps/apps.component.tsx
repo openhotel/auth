@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { RedirectComponent } from "shared/components";
 import { useAccount, useUser } from "shared/hooks";
+import { getLoginRedirect } from "shared/utils";
 
 export const AppsComponent: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -27,11 +28,7 @@ export const AppsComponent: React.FC = () => {
 
   if (!appId) return <RedirectComponent to="/" />;
   if (isLogged !== null && !isLogged)
-    return (
-      <RedirectComponent
-        to={`/login?redirect=${btoa(JSON.stringify({ type: "app", appId }))}`}
-      />
-    );
+    return <RedirectComponent to={getLoginRedirect({ type: "app", appId })} />;
 
   return <div>Thinking...</div>;
 };

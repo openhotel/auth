@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { RedirectComponent } from "shared/components";
 import { useAccount, useConnection, useHotel } from "shared/hooks";
 import { PartialConnection } from "shared/types";
-import { arraysMatch } from "shared/utils";
+import { arraysMatch, getLoginRedirect } from "shared/utils";
 import { ButtonComponent } from "@openhotel/web-components";
 
 export const ConnectionComponent: React.FC = () => {
@@ -61,7 +61,7 @@ export const ConnectionComponent: React.FC = () => {
   if (isLogged === false)
     return (
       <RedirectComponent
-        to={`/login?redirect=${btoa(JSON.stringify({ type: "integration", hotelId, integrationId }))}`}
+        to={getLoginRedirect({ type: "integration", hotelId, integrationId })}
       />
     );
   if (isLogged === null || connection === undefined)
