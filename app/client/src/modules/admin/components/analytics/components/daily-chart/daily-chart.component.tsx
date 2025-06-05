@@ -107,7 +107,11 @@ export const DailyChartComponent: React.FC<Props> = ({
         //@ts-ignore
         tickLabelComponent={<CustomTickLabel />}
       />
-      <VictoryAxis dependentAxis style={{ tickLabels: { fontSize: 6 } }} />
+      <VictoryAxis
+        dependentAxis
+        tickFormat={(t) => (Number.isInteger(t) ? t : "")}
+        style={{ tickLabels: { fontSize: 6 } }}
+      />
 
       <VictoryGroup offset={4} colorScale={["#e546c0", "#67be31"]}>
         <VictoryBar data={usersData} />
