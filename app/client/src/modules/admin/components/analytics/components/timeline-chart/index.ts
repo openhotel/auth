@@ -1,2 +1,1 @@
-
-export * from './timeline-chart.component'
+export * from "./timeline-chart.component";
