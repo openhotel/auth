@@ -3,7 +3,6 @@ import {
   AccountIconComponent,
   AdminIconComponent,
   AnalyticsIconComponent,
-  ButtonComponent,
   ConnectionsIconComponent,
   DatabaseIconComponent,
   HomeIconComponent,
