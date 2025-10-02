@@ -13,7 +13,6 @@ import {
 } from "@openhotel/web-components";
 import { LinkComponent } from "shared/components";
 import { useAccount, useUser } from "shared/hooks";
-//@ts-ignore
 import styles from "./navigator.module.scss";
 
 export const HomeNavigatorComponent: React.FC = () => {
