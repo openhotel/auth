@@ -100,10 +100,9 @@ export const mainGetRequest: RequestType = {
                 const integrationData = integration.getObject();
 
                 const active = activeConnections.some(
-                  (connection) =>
-                    connection.hotelId === hotelId &&
-                    connection.integrationId === integrationId &&
-                    connection.type === integrationData.type,
+                  ($connection) =>
+                    connection.hotelId === $connection.hotelId &&
+                    connection.integrationId === $connection.integrationId,
                 );
                 return {
                   active,
