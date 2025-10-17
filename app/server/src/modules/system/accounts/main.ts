@@ -218,7 +218,7 @@ export const accounts = () => {
 
       const connection = await System.db.get([
         "activeIntegrationConnectionByAccountId",
-        accountByConnectionId,
+        accountByConnectionId.accountId,
         accountByConnectionId.type,
       ]);
       if (!connection || !compareToken(token, connection.tokenHash))
