@@ -25,18 +25,14 @@ export const usersGetRequest: RequestType = {
 
     const users = (
       await Promise.allSettled(
-        accounts.map(account => account.getPublicObject())
+        accounts.map((account) => account.getPublicObject()),
       )
     )
-      .filter(
-        (result) =>
-          result.status === "fulfilled"
-      )
-      .map(result => result.value)
+      .filter((result) => result.status === "fulfilled")
+      .map((result) => result.value)
       .sort((userA: any, userB: any) =>
-        userA.createdAt > userB.createdAt ? -1 : 1
+        userA.createdAt > userB.createdAt ? -1 : 1,
       );
-
 
     return getResponse(HttpStatusCode.OK, {
       data: { users },

@@ -508,7 +508,7 @@ export const accounts = () => {
 
         return await System.db.crypto.decryptSHA256(encryptedEmail);
       } catch (e) {
-        return 'invalid'
+        return "invalid";
       }
     };
 
