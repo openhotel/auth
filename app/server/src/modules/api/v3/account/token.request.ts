@@ -14,6 +14,9 @@ export const tokenGetRequest: RequestType = {
   func: async (request: Request) => {
     const account = await System.accounts.getAccount({ request });
 
+    if (account.getObject().restrictions)
+      return getResponse(HttpStatusCode.LOCKED);
+
     const tokens = await account.getTokens();
 
     return getResponse(HttpStatusCode.OK, {
@@ -30,6 +33,9 @@ export const tokenDeleteRequest: RequestType = {
   kind: RequestKind.ACCOUNT,
   func: async (request: Request) => {
     const account = await System.accounts.getAccount({ request });
+
+    if (account.getObject().restrictions)
+      return getResponse(HttpStatusCode.LOCKED);
 
     const tokenId = new URL(request.url).searchParams.get("tokenId");
     if (!tokenId) return getResponse(HttpStatusCode.BAD_REQUEST);
