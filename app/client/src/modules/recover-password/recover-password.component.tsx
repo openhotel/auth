@@ -44,7 +44,7 @@ export const RecoverPasswordComponent: React.FC = () => {
         <h1 className={styles.title}>Recover password</h1>
         <InputComponent name="email" placeholder="Email" />
 
-        <ButtonComponent fullWidth={true} disabled={!captchaReady}>
+        <ButtonComponent fullWidth={true} loading={!captchaReady}>
           Recover
         </ButtonComponent>
         {statusMessage ? (

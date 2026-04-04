@@ -49,7 +49,7 @@ export const ChangePasswordComponent: React.FC = () => {
         <h1 className={styles.title}>Change password</h1>
         <PasswordComponent />
 
-        <ButtonComponent fullWidth={true} disabled={!captchaReady}>
+        <ButtonComponent fullWidth={true} loading={!captchaReady}>
           Change
         </ButtonComponent>
         {errorMessage ? (

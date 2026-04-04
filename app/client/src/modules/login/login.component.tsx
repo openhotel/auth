@@ -83,7 +83,7 @@ export const LoginComponent: React.FC = () => {
             maxLength={6}
           />
         )}
-        <ButtonComponent disabled={!captchaReady} fullWidth={true}>
+        <ButtonComponent loading={!captchaReady} fullWidth={true}>
           Login
         </ButtonComponent>
         {errorMessage ? (

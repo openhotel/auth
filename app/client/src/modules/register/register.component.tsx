@@ -104,7 +104,7 @@ export const RegisterComponent: React.FC = () => {
           options={languageOptions}
           clearable={false}
         />
-        <ButtonComponent disabled={!captchaReady} fullWidth>
+        <ButtonComponent loading={!captchaReady} fullWidth>
           Register
         </ButtonComponent>
         {errorMessage && (
