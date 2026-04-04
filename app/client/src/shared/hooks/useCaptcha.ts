@@ -7,7 +7,6 @@ export const useCaptcha = () => {
   const { fetch } = useApi();
   const { getAccountHeaders } = useAccount();
 
-
   const get = useCallback(
     () =>
       fetch({
