@@ -21,6 +21,7 @@ export const captcha = () => {
       });
     } catch (e) {
       console.error("Captcha did not load because of an error!");
+      console.error(e);
     }
   };
 
