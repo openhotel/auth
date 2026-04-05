@@ -2,7 +2,11 @@ import React, { FormEvent, useCallback, useEffect, useState } from "react";
 import { LinkComponent } from "shared/components";
 import { useAccount, useCaptchaV2, useHotel } from "shared/hooks";
 import { useNavigate } from "react-router-dom";
-import { ButtonComponent, InputComponent } from "@openhotel/web-components";
+import {
+  ButtonComponent,
+  InputComponent,
+  OtpComponent,
+} from "@openhotel/web-components";
 
 import styles from "./login.module.scss";
 
@@ -81,10 +85,10 @@ export const LoginComponent: React.FC = () => {
         />
 
         {showOTP && (
-          <InputComponent
+          <OtpComponent
+            wrapperClassName={styles.otp}
+            className={styles.otpInput}
             name="otpToken"
-            placeholder="One Time Password"
-            maxLength={6}
           />
         )}
         <ButtonComponent
