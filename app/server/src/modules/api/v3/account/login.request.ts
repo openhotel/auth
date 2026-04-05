@@ -59,7 +59,7 @@ export const loginPostRequest: RequestType = {
 
     if (!isValidOTP)
       return Response.json(
-        { status: 441, message: "OTP is not valid!" },
+        { status: 441, message: "OTP is missing!" },
         {
           status: 441,
         },
